@@ -1,0 +1,91 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*
+ * Kelo brand palette — single source of truth.
+ * Channels are space-separated RGB so Tailwind can apply alpha modifiers and
+ * SpaceBackground can read --kelo-brand directly via getComputedStyle.
+ * Swapping in the real brand blue means editing these ten lines and nothing else.
+ */
+:root {
+  --kelo-50: 239 245 255;
+  --kelo-100: 219 232 254;
+  --kelo-200: 191 214 254;
+  --kelo-300: 147 187 253;
+  --kelo-400: 96 152 250;
+  --kelo-500: 59 118 246;
+  --kelo-600: 37 96 235;
+  --kelo-700: 29 76 216;
+  --kelo-800: 30 64 175;
+  --kelo-900: 30 58 138;
+
+  --kelo-brand: var(--kelo-600);
+
+  /*
+   * Warm accent — used sparingly against the blue (gradient accents, glow
+   * rings, count-up numbers). Never a full section fill.
+   */
+  --sun-50: 255 247 237;
+  --sun-100: 255 237 213;
+  --sun-200: 254 215 170;
+  --sun-300: 253 186 116;
+  --sun-400: 251 146 60;
+  --sun-500: 249 115 22;
+  --sun-600: 234 88 12;
+  --sun-700: 194 65 12;
+
+  /*
+   * Bespoke blue-black scale for dark sections (how-it-works, footer), so
+   * dark blocks read as branded rather than a generic slate-900 slab.
+   */
+  --ink-700: 26 35 64;
+  --ink-800: 17 24 46;
+  --ink-900: 10 16 32;
+  --ink-950: 6 10 22;
+
+  color-scheme: light;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  /* Anchor links land below the sticky nav instead of underneath it. */
+  section[id] {
+    scroll-margin-top: 5.5rem;
+  }
+
+  body {
+    @apply bg-white text-slate-900 antialiased;
+  }
+
+  ::selection {
+    background-color: rgb(var(--kelo-200));
+    color: rgb(var(--kelo-900));
+  }
+
+  :focus-visible {
+    outline: 2px solid rgb(var(--kelo-600));
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+
+    /* Backstop for CSS-driven ambient motion. Framer Motion components handle
+       this themselves through useMotionSafe(). */
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+    }
+  }
+}
