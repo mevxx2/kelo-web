@@ -2,25 +2,27 @@
 
 import { useRef, type ReactNode } from "react";
 import { usePathname } from "next/navigation";
-import { AnimatePresence, motion, type Variants } from "framer-motion";
+import { motion } from "framer-motion";
 
-import { FrozenRouter } from "@/lib/frozen-router";
 import { getFunnelStepIndex } from "@/lib/funnel-steps";
 import { EASE_OUT, useMotionSafe } from "@/lib/motion";
 
 /*
- * Cross-route enter/exit transitions. See lib/frozen-router.tsx for why the
- * outgoing tree needs its router context pinned during the exit animation.
+ * Cross-route enter animation. Enter-only, no exit fade, on purpose.
  *
- * Keyed on the *full* pathname — every navigation gets a fresh motion.div
- * (and therefore a fresh FrozenRouter capturing the then-current context).
- * An earlier version keyed this on just the top-level segment so the
- * /get-started funnel wouldn't replay a generic fade on every step, but that
- * meant the wrapper never remounted across funnel steps, so FrozenRouter's
- * captured context went stale and later steps silently kept rendering the
- * first step's content. Keying on the full pathname and instead switching
- * *variant* (slide vs fade) based on route gets the same "no generic fade
- * inside the funnel" result without breaking FrozenRouter's one-shot design.
+ * An earlier version used AnimatePresence plus a `FrozenRouter` helper that
+ * pinned Next's internal LayoutRouterContext so the outgoing page could keep
+ * rendering its own content during an exit animation. That reached into a
+ * Next.js internal in a way that could race with the App Router's own
+ * concurrent SSR rendering (observed directly: "Detected multiple renderers
+ * concurrently rendering the same context provider", logged during SSR) —
+ * and on some page loads that race left the fixed header's entrance
+ * animation, and all of its interactivity (scroll-spy, the solid/transparent
+ * toggle), permanently stuck at its initial hidden state. Losing the old
+ * page's fade-out is a small trade for not silently breaking the nav.
+ *
+ * Keyed on the full pathname, so every navigation gets a fresh motion.div
+ * and replays its entrance.
  */
 export function PageTransition({ children }: { children: ReactNode }) {
   const pathname = usePathname();
@@ -39,33 +41,18 @@ export function PageTransition({ children }: { children: ReactNode }) {
   const fadeDistance = safe ? 12 : 0;
   const duration = safe ? (inFunnel ? 0.36 : 0.34) : 0.001;
 
-  const variants: Variants = inFunnel
-    ? {
-        enter: (dir: number) => ({ opacity: 0, x: dir * slideDistance }),
-        center: { opacity: 1, x: 0 },
-        exit: (dir: number) => ({ opacity: 0, x: dir * -slideDistance }),
-      }
-    : {
-        enter: { opacity: 0, y: fadeDistance },
-        center: { opacity: 1, y: 0 },
-        exit: { opacity: 0, y: -fadeDistance },
-      };
+  const initial = inFunnel
+    ? { opacity: 0, x: direction * slideDistance }
+    : { opacity: 0, y: fadeDistance };
 
   return (
-    // initial={false} so the very first paint is left to the hero's own
-    // orchestrated reveal rather than being covered by a page-level fade.
-    <AnimatePresence mode="wait" initial={false} custom={direction}>
-      <motion.div
-        key={pathname}
-        custom={direction}
-        variants={variants}
-        initial="enter"
-        animate="center"
-        exit="exit"
-        transition={{ duration, ease: EASE_OUT }}
-      >
-        <FrozenRouter>{children}</FrozenRouter>
-      </motion.div>
-    </AnimatePresence>
+    <motion.div
+      key={pathname}
+      initial={initial}
+      animate={{ opacity: 1, x: 0, y: 0 }}
+      transition={{ duration, ease: EASE_OUT }}
+    >
+      {children}
+    </motion.div>
   );
 }
