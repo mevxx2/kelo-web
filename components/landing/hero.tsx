@@ -110,26 +110,22 @@ export function Hero() {
           {/* Brand wordmark, the "welcome" moment before the value-prop
               headline. Two stacked spans (CSS grid overlap, not absolute
               positioning, so they can't drift apart if font metrics change):
-              a blurred glow halo behind a sharp shine-swept gradient span. */}
+              a blurred blue glow halo behind a sharp blue gradient span. */}
           <motion.div variants={item} className="mt-6 flex justify-center">
             <div className="relative grid place-items-center">
-              <span
-                aria-hidden="true"
-                className="col-start-1 row-start-1 select-none bg-gradient-to-r from-kelo-500 to-sun-400 bg-clip-text text-6xl font-black tracking-tight text-transparent opacity-70 blur-2xl sm:text-8xl"
-              >
-                Kelo Care
-              </span>
               <motion.span
-                animate={safe ? { scale: [1, 1.015, 1] } : undefined}
-                transition={{ duration: 4.5, repeat: Infinity, ease: "easeInOut" }}
-                className="col-start-1 row-start-1 select-none bg-[length:200%_auto] bg-clip-text text-6xl font-black tracking-tight text-transparent [text-shadow:0_12px_36px_rgb(var(--kelo-500)/0.35)] animate-text-shine sm:text-8xl"
-                style={{
-                  backgroundImage:
-                    "linear-gradient(110deg, rgb(var(--kelo-600)) 20%, rgb(var(--sun-400)) 40%, #ffffff 50%, rgb(var(--sun-400)) 60%, rgb(var(--kelo-600)) 80%)",
-                }}
+                animate={safe ? { opacity: [0.4, 0.7, 0.4] } : undefined}
+                transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                aria-hidden="true"
+                className="col-start-1 row-start-1 select-none bg-gradient-to-r from-blue-500 to-blue-400 bg-clip-text text-6xl font-black tracking-tight text-transparent blur-2xl sm:text-8xl"
               >
                 Kelo Care
               </motion.span>
+              <span
+                className="col-start-1 row-start-1 select-none bg-gradient-to-r from-blue-600 to-blue-400 bg-clip-text text-6xl font-black tracking-tight text-transparent [text-shadow:0_12px_36px_rgb(59,130,246/0.35)] sm:text-8xl"
+              >
+                Kelo Care
+              </span>
             </div>
           </motion.div>
 
