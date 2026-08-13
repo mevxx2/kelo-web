@@ -46,9 +46,9 @@ const VARIANTS: Record<Variant, string> = {
   // Liquid glass — glossy frosted effect with blue tint and strong backdrop blur
   // for a premium look over rich/gradient scenes (the hero).
   glass:
-    "bg-gradient-to-br from-blue-400/35 to-blue-600/35 text-white shadow-lg ring-1 ring-inset ring-white/60 backdrop-blur-2xl hover:from-blue-400/50 hover:to-blue-600/50 focus-visible:outline-white",
+    "bg-gradient-to-br from-blue-500/60 to-blue-700/60 text-white shadow-lg ring-1 ring-inset ring-white/70 backdrop-blur-2xl hover:from-blue-500/75 hover:to-blue-700/75 focus-visible:outline-white",
   glassOutline:
-    "bg-gradient-to-br from-blue-400/35 to-blue-600/35 text-white shadow-lg ring-1 ring-inset ring-white/60 backdrop-blur-2xl hover:from-blue-400/50 hover:to-blue-600/50 focus-visible:outline-white",
+    "bg-gradient-to-br from-blue-400/15 to-blue-600/15 text-white shadow-md ring-1 ring-inset ring-white/50 backdrop-blur-2xl hover:from-blue-400/25 hover:to-blue-600/25 focus-visible:outline-white",
 };
 
 const SIZES: Record<Size, string> = {
