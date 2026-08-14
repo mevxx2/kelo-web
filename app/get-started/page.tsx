@@ -122,7 +122,7 @@ export default function RoleSelectionPage() {
                 whileTap={safe ? { scale: 0.985 } : undefined}
                 transition={{ duration: 0.3, ease: EASE_OUT }}
                 className={cn(
-                  "living-card group relative flex flex-col rounded-3xl border p-6 text-left backdrop-blur-xl transition-colors duration-300",
+                  "living-card group relative flex flex-col rounded-3xl border p-6 text-left backdrop-blur-md transition-colors duration-300",
                   isSelected
                     ? "border-kelo-300/70 bg-kelo-500/15 shadow-lift"
                     : "border-white/20 bg-white/[0.07] shadow-card hover:border-kelo-300/50",

@@ -121,7 +121,7 @@ function Confirmation() {
           <motion.li
             key={step}
             variants={item}
-            className="living-card flex items-start gap-3 rounded-2xl border border-white/20 bg-white/[0.075] p-4 shadow-[0_14px_40px_-28px_rgba(4,7,28,.9)] backdrop-blur-xl"
+            className="living-card flex items-start gap-3 rounded-2xl border border-white/20 bg-white/[0.075] p-4 shadow-[0_14px_40px_-28px_rgba(4,7,28,.9)] backdrop-blur-md"
           >
             <span className="flex h-6 w-6 flex-none items-center justify-center rounded-full bg-kelo-500/10 text-xs font-bold text-kelo-300 ring-1 ring-inset ring-kelo-400/20">
               {i + 1}

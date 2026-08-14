@@ -157,8 +157,8 @@ function Hero() {
             <motion.div
               key={screen}
               initial={{ opacity: 0, scale: .8, x: 0, y: 40 }}
-              animate={safe ? { opacity: 1, scale: 1, x: [0, i % 2 ? 8 : -8, 0], y: [0, i % 2 ? -10 : 8, 0] } : { opacity: 1, scale: 1 }}
-              transition={{ opacity: { delay: 2.35 + i * .12, duration: .5 }, scale: { delay: 2.35 + i * .12 }, x: { duration: 8 + i, repeat: Infinity }, y: { duration: 7 + i, repeat: Infinity } }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              transition={{ delay: safe ? 2.35 + i * .12 : 0, duration: safe ? .5 : .15, ease: EASE_OUT }}
               className={cn("absolute", i === 0 && "left-[2%] top-20", i === 1 && "left-[25%] top-0", i === 2 && "right-[25%] top-7", i === 3 && "right-[2%] top-24", i > 1 && "hidden sm:block")}
             >
               <LivingCard className="w-52 p-4 text-left sm:w-60" breathe={1.012}><AppPreview type={screen} /></LivingCard>
@@ -182,7 +182,7 @@ function Features() {
         </motion.div>
         <div className="mt-20 grid gap-8 sm:grid-cols-2">
           {FEATURES.map((feature, i) => (
-            <motion.div key={feature.title} initial={safe ? { opacity: 0, scale: .55, y: 70 } : { opacity: 0 }} whileInView={{ opacity: 1, scale: 1, y: 0 }} viewport={{ once: true, amount: .35 }} transition={{ duration: safe ? .75 : .2, delay: safe ? i * .08 : 0, ease: EASE_OUT }} className={cn(i % 2 ? "sm:translate-y-20" : "") }>
+            <motion.div key={feature.title} initial={safe ? { opacity: 0, y: 24 } : { opacity: 0 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: .25 }} transition={{ duration: safe ? .55 : .2, delay: safe ? i * .06 : 0, ease: EASE_OUT }} className={cn(i % 2 ? "sm:translate-y-20" : "") }>
               <span aria-hidden="true" className={cn("absolute top-1/2 hidden h-px w-20 bg-gradient-to-r from-kelo-300/70 to-transparent sm:block", i % 2 ? "right-full" : "left-full rotate-180")} />
               <LivingCard className="min-h-64 p-8">
                 <motion.svg viewBox="0 0 24 24" className="h-12 w-12 text-[#b8b0ff]" fill="none" aria-hidden="true">
@@ -201,9 +201,16 @@ function Features() {
 
 function HowItWorks() {
   const ref = useRef<HTMLElement>(null);
+  const activeRef = useRef(0);
   const [active, setActive] = useState(0);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start center", "end center"] });
-  useMotionValueEvent(scrollYProgress, "change", (value) => setActive(Math.min(2, Math.floor(value * 3))));
+  useMotionValueEvent(scrollYProgress, "change", (value) => {
+    const next = Math.min(2, Math.floor(value * 3));
+    if (next !== activeRef.current) {
+      activeRef.current = next;
+      setActive(next);
+    }
+  });
 
   return (
     <section ref={ref} id="how-it-works" className="relative px-5 py-32 sm:py-44">
@@ -214,8 +221,8 @@ function HowItWorks() {
           <ol className="relative space-y-8 before:absolute before:bottom-8 before:left-[1.4rem] before:top-8 before:w-px before:bg-white/15">
             {STEPS.map((step, i) => (
               <li key={step.title} className="relative flex gap-6">
-                <motion.span animate={{ scale: active === i ? 1.18 : 1, backgroundColor: active >= i ? "#6f5cff" : "rgba(255,255,255,.1)" }} className="relative z-10 flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-white/20 text-sm font-bold text-white shadow-[0_0_28px_rgba(91,71,255,.35)]">0{i + 1}</motion.span>
-                <motion.div animate={{ opacity: active === i ? 1 : .45, x: active === i ? 8 : 0 }} className="pb-8">
+                <motion.span initial={false} animate={{ scale: active === i ? 1.18 : 1, backgroundColor: active >= i ? "#6f5cff" : "rgba(255,255,255,.1)" }} className="relative z-10 flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-white/20 text-sm font-bold text-white shadow-[0_0_28px_rgba(91,71,255,.35)]">0{i + 1}</motion.span>
+                <motion.div initial={false} animate={{ opacity: active === i ? 1 : .45, x: active === i ? 8 : 0 }} className="pb-8">
                   <h3 className="text-xl font-semibold text-white">{step.title}</h3>
                   <p className="mt-2 max-w-lg leading-relaxed text-white/60">{step.body}</p>
                 </motion.div>

@@ -44,7 +44,7 @@ export function CareCanvas({ children }: { children: ReactNode }) {
             strokeWidth="2.2"
             strokeLinecap="round"
             vectorEffect="non-scaling-stroke"
-            className="thread-pulse"
+            className="thread-pulse global-thread"
           />
           <defs>
             <linearGradient id="threadGradient" x1="0" y1="0" x2="0" y2="8000" gradientUnits="userSpaceOnUse">

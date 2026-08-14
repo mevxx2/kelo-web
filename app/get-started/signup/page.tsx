@@ -136,7 +136,7 @@ function SignupForm() {
         variants={field}
         onSubmit={handleSubmit}
         noValidate
-        className="living-card mt-10 rounded-[2rem] border border-white/20 bg-white/[0.075] p-7 shadow-[0_22px_70px_-34px_rgba(4,7,28,.9),inset_0_1px_0_rgba(255,255,255,.18)] backdrop-blur-xl sm:p-8"
+        className="living-card mt-10 rounded-[2rem] border border-white/20 bg-white/[0.075] p-7 shadow-[0_22px_70px_-34px_rgba(4,7,28,.9),inset_0_1px_0_rgba(255,255,255,.18)] backdrop-blur-md sm:p-8"
       >
         <Field
           id="name"

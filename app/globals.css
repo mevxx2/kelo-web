@@ -52,6 +52,7 @@
 @layer base {
   html {
     scroll-behavior: smooth;
+    position: relative;
     -webkit-text-size-adjust: 100%;
   }
 
@@ -124,8 +125,12 @@ html:not([data-theme="light"]) #hero .thread-text {
 }
 
 .thread-pulse {
-  filter: drop-shadow(0 0 4px rgb(var(--kelo-300) / 0.8)) drop-shadow(0 0 12px rgb(var(--kelo-500) / 0.35));
+  filter: drop-shadow(0 0 4px rgb(var(--kelo-300) / 0.55));
   animation: thread-heartbeat 2.15s ease-in-out infinite;
+}
+
+.global-thread {
+  filter: none !important;
 }
 
 .thread-text {
@@ -136,6 +141,18 @@ html:not([data-theme="light"]) #hero .thread-text {
 }
 
 .heartbeat-button {
+  isolation: isolate;
+}
+
+.heartbeat-button::after {
+  content: "";
+  position: absolute;
+  inset: 2px;
+  z-index: -1;
+  border-radius: inherit;
+  background: rgb(var(--kelo-400) / 0.42);
+  opacity: 0;
+  transform: scale(1);
   animation: button-heartbeat 2.15s ease-in-out infinite;
 }
 
@@ -269,7 +286,7 @@ html[data-theme="light"] .thread-text {
 }
 
 html[data-theme="light"] .thread-pulse {
-  filter: drop-shadow(0 0 4px rgba(50, 0, 202, 0.35));
+  filter: drop-shadow(0 0 3px rgba(50, 0, 202, 0.28));
 }
 
 html[data-theme="light"] .heartbeat-button,
@@ -320,17 +337,17 @@ html[data-theme="light"] .theme-toggle-thumb {
 }
 
 @keyframes thread-heartbeat {
-  0%, 38%, 60%, 100% { opacity: 0.72; filter: drop-shadow(0 0 3px rgb(var(--kelo-300) / 0.55)); }
-  43% { opacity: 1; filter: drop-shadow(0 0 8px rgb(var(--kelo-200) / 0.95)) drop-shadow(0 0 18px rgb(var(--kelo-500) / 0.5)); }
+  0%, 38%, 60%, 100% { opacity: 0.72; }
+  43% { opacity: 1; }
   48% { opacity: 0.78; }
-  53% { opacity: 1; filter: drop-shadow(0 0 6px rgb(var(--kelo-300) / 0.85)); }
+  53% { opacity: 1; }
 }
 
 @keyframes button-heartbeat {
-  0%, 38%, 60%, 100% { box-shadow: 0 12px 32px -8px rgb(var(--kelo-600) / 0.45); }
-  43% { box-shadow: 0 0 0 5px rgb(var(--kelo-400) / 0.11), 0 14px 42px -5px rgb(var(--kelo-400) / 0.72); }
-  48% { box-shadow: 0 12px 32px -8px rgb(var(--kelo-600) / 0.45); }
-  53% { box-shadow: 0 0 0 3px rgb(var(--kelo-400) / 0.09), 0 14px 38px -6px rgb(var(--kelo-400) / 0.62); }
+  0%, 38%, 60%, 100% { opacity: 0; transform: scale(1); }
+  43% { opacity: 0.36; transform: scale(1.12); }
+  48% { opacity: 0; transform: scale(1.02); }
+  53% { opacity: 0.26; transform: scale(1.08); }
 }
 
 @keyframes care-marquee {
@@ -355,5 +372,24 @@ html[data-theme="light"] .theme-toggle-thumb {
   .thread-pulse {
     opacity: 0.9;
     filter: none;
+  }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .living-card:hover {
+    transform: translate3d(0, -3px, 0);
+  }
+}
+
+@media (max-width: 767px) {
+  .living-card,
+  header nav,
+  header > div > div {
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+  }
+
+  .care-grain {
+    animation: none;
   }
 }

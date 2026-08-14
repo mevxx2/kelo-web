@@ -1,7 +1,6 @@
 import type { Metadata, Viewport } from "next";
 
 import { PageTransition } from "@/components/page-transition";
-import { ScrollProgress } from "@/components/scroll-progress";
 import { SiteHeader } from "@/components/site-header";
 
 import "./globals.css";
@@ -66,8 +65,6 @@ export default function RootLayout({
         >
           Skip to content
         </a>
-
-        <ScrollProgress />
 
         {/* Outside PageTransition: see the note in site-header.tsx. */}
         <SiteHeader />
