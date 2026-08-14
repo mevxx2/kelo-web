@@ -200,15 +200,15 @@ html[data-theme="light"] {
 }
 
 html[data-theme="light"] body {
-  background: #e8e3f3 !important;
+  background: #ffffff !important;
   color: #18162f;
 }
 
 html[data-theme="light"] .care-ambient {
   background:
-    radial-gradient(circle at 50% 0%, rgba(255, 172, 108, 0.22), transparent 24%),
-    radial-gradient(circle at 12% 46%, rgba(90, 108, 225, 0.13), transparent 30%),
-    radial-gradient(circle at 86% 70%, rgba(79, 55, 190, 0.1), transparent 30%);
+    radial-gradient(circle at 50% 0%, rgba(108, 128, 255, 0.08), transparent 24%),
+    radial-gradient(circle at 12% 46%, rgba(90, 108, 225, 0.09), transparent 30%),
+    radial-gradient(circle at 86% 70%, rgba(79, 55, 190, 0.07), transparent 30%);
 }
 
 html[data-theme="light"] .care-grain {
@@ -284,7 +284,7 @@ html[data-theme="light"] #mobile-menu {
 }
 
 html[data-theme="light"] .theme-surface {
-  background: #e9e7f7 !important;
+  background: #fbfcff !important;
   color: #18162f;
 }
 

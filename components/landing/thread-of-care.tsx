@@ -114,7 +114,7 @@ function Hero() {
     <section id="hero" className="relative min-h-[1050px] overflow-hidden px-5 pb-24 pt-32 sm:pt-40">
       <div className="mx-auto max-w-6xl text-center">
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: safe ? 0.5 : 0.15 }} className="flex justify-center">
-          <Image src="/images/logo.png" alt="Kelo Care" width={332} height={277} priority className="h-14 w-auto" />
+          <Image src="/images/logo.png" alt="Kelo Care" width={332} height={277} priority className="h-28 w-auto" />
         </motion.div>
 
         <motion.svg viewBox="0 0 900 180" className="mx-auto mt-5 h-32 w-full max-w-4xl overflow-visible" fill="none" aria-hidden="true">

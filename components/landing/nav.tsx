@@ -97,7 +97,7 @@ export function Nav() {
         >
           <Link
             href="/"
-            className="group flex items-center gap-2 pl-1.5"
+            className="group ml-3 flex items-center gap-2 pl-1.5 sm:ml-5"
             aria-label="Kelo Care home"
           >
             <LogoMark />

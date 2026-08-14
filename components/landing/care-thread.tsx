@@ -26,7 +26,7 @@ export function CareCanvas({ children }: { children: ReactNode }) {
     progress,
     [0, 0.24, 0.62, 1],
     light
-      ? ["#f7e9df", "#edf0ff", "#dfe5ff", "#e8e3f3"]
+      ? ["#ffffff", "#f8faff", "#f2f5ff", "#f8f7ff"]
       : ["#211b2c", "#172044", "#121b4e", "#100d29"],
   );
 
