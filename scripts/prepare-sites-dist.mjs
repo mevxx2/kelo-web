@@ -1,4 +1,4 @@
-import { cpSync, existsSync, rmSync } from "node:fs";
+import { cpSync, existsSync, mkdirSync, rmSync } from "node:fs";
 import { resolve } from "node:path";
 
 const projectRoot = process.cwd();
@@ -11,3 +11,7 @@ if (!existsSync(exported)) {
 
 rmSync(destination, { recursive: true, force: true });
 cpSync(exported, destination, { recursive: true });
+mkdirSync(resolve(destination, "server"), { recursive: true });
+cpSync(resolve(projectRoot, "worker", "server", "index.js"), resolve(destination, "server", "index.js"));
+mkdirSync(resolve(destination, ".openai"), { recursive: true });
+cpSync(resolve(projectRoot, ".openai", "hosting.json"), resolve(destination, ".openai", "hosting.json"));
