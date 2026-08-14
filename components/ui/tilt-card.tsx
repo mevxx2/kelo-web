@@ -63,7 +63,7 @@ export function useTilt<T extends HTMLElement = HTMLDivElement>({
 
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
-  const spotlightBackground = useMotionTemplate`radial-gradient(340px circle at ${mouseX}px ${mouseY}px, rgb(var(--kelo-200) / 0.5), transparent 70%)`;
+  const spotlightBackground = useMotionTemplate`radial-gradient(340px circle at ${mouseX}px ${mouseY}px, rgb(var(--kelo-400) / 0.16), transparent 70%)`;
 
   const onMouseMove = (event: MouseEvent<T>) => {
     if (!safe || !ref.current) return;
@@ -144,7 +144,7 @@ export function TiltCard({
       onMouseMove={handlers.onMouseMove}
       onMouseLeave={handlers.onMouseLeave}
       className={cn(
-        "group relative overflow-hidden rounded-3xl border border-slate-200/80 bg-white shadow-card transition-shadow duration-300 hover:shadow-lift",
+        "group relative overflow-hidden rounded-3xl border border-white/10 bg-white/[0.04] backdrop-blur-sm transition-colors duration-300 hover:bg-white/[0.07] hover:border-white/15",
         className,
       )}
     >

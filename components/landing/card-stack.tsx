@@ -174,10 +174,14 @@ function PhoneFrame({
   return (
     <div
       className={cn(
-        "pointer-events-auto relative overflow-hidden rounded-[2rem] border border-white/70 bg-white/80 shadow-lift backdrop-blur-xl",
-        "ring-1 ring-inset ring-white/70",
+        // The mock screens inside show the actual product's (light) UI, so
+        // the frame stays a light glass pane by design — it's meant to read
+        // as a physical phone floating on the dark marketing page, not to
+        // match the page's own theme.
+        "pointer-events-auto relative overflow-hidden rounded-[2rem] border border-white/70 bg-white/90 backdrop-blur-xl",
+        "shadow-[0_24px_60px_-16px_rgb(0_0_0/0.7),0_0_0_1px_rgb(255_255_255/0.7)_inset]",
         compact ? "h-[280px] w-[140px]" : "h-[400px] w-[200px]",
-        accent && "border-kelo-200",
+        accent && "border-kelo-300",
         // A CSS animation, not a framer-motion one, so it composes with the
         // parent's framer-controlled transform instead of overriding it.
         floating && "animate-float",

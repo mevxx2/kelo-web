@@ -4,7 +4,6 @@ import { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 
 import { AnimatedNumber } from "@/components/ui/animated-number";
-import { FloatingParticles } from "@/components/ui/floating-particles";
 import { TiltCard } from "@/components/ui/tilt-card";
 import { EASE_OUT, cardIn, staggerContainer, useMotion, viewportOnce } from "@/lib/motion";
 
@@ -49,9 +48,7 @@ export function Problem() {
   const gridY = useTransform(scrollYProgress, [0, 1], [safe ? 32 : 0, safe ? -32 : 0]);
 
   return (
-    <section ref={sectionRef} className="relative overflow-hidden bg-white py-24 sm:py-32">
-      <FloatingParticles seed={11} count={6} />
-
+    <section ref={sectionRef} className="relative overflow-hidden bg-ink-950 py-24 sm:py-32">
       <motion.div
         initial="hidden"
         whileInView="visible"
@@ -68,7 +65,7 @@ export function Problem() {
               transition: { duration: time(0.5), ease: EASE_OUT },
             },
           }}
-          className="text-sm font-semibold uppercase tracking-widest text-kelo-600"
+          className="text-sm font-medium uppercase tracking-widest text-kelo-400"
         >
           The problem
         </motion.p>
@@ -82,7 +79,7 @@ export function Problem() {
               transition: { duration: time(0.65), ease: EASE_OUT },
             },
           }}
-          className="mt-4 max-w-2xl text-balance text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl"
+          className="mt-4 max-w-2xl text-balance text-3xl font-normal tracking-tight text-white sm:text-4xl"
         >
           Care work runs on memory and good intentions.
         </motion.h2>
@@ -109,15 +106,15 @@ export function Problem() {
               {/* Rule grows on hover, tying the stat to the copy below it. */}
               <span
                 aria-hidden="true"
-                className="absolute left-7 top-7 h-10 w-0.5 origin-top scale-y-100 bg-gradient-to-b from-kelo-400 to-sun-400 opacity-40 transition-all duration-500 group-hover:h-16 group-hover:opacity-100 motion-reduce:transition-none"
+                className="absolute left-7 top-7 h-10 w-0.5 origin-top scale-y-100 bg-kelo-400/50 transition-all duration-500 group-hover:h-16 group-hover:opacity-100 motion-reduce:transition-none"
               />
-              <p className="bg-gradient-to-br from-kelo-600 to-sun-500 bg-clip-text text-4xl font-bold tabular-nums tracking-tight text-transparent">
+              <p className="text-4xl font-semibold tabular-nums tracking-tight text-white">
                 <AnimatedNumber value={pain.value} suffix={pain.suffix} />
               </p>
-              <h3 className="mt-3 text-base font-semibold text-slate-900">
+              <h3 className="mt-3 text-base font-semibold text-white">
                 {pain.title}
               </h3>
-              <p className="mt-2 text-pretty text-sm leading-relaxed text-slate-600">
+              <p className="mt-2 text-pretty text-sm leading-relaxed text-white/50">
                 {pain.body}
               </p>
             </TiltCard>

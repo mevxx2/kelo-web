@@ -5,7 +5,6 @@ import { motion, useScroll, useTransform } from "framer-motion";
 
 import { AnimatedNumber } from "@/components/ui/animated-number";
 import { ArrowRight, CtaButton } from "@/components/ui/button";
-import { FloatingParticles } from "@/components/ui/floating-particles";
 import { scaleIn, staggerContainer, useMotion, viewportOnce, EASE_OUT } from "@/lib/motion";
 
 const INCLUDED = [
@@ -33,10 +32,8 @@ export function Pricing() {
     <section
       ref={sectionRef}
       id="pricing"
-      className="relative overflow-hidden bg-white py-24 sm:py-32"
+      className="relative overflow-hidden bg-ink-950 py-24 sm:py-32"
     >
-      <FloatingParticles seed={44} count={6} />
-
       <div className="relative mx-auto max-w-6xl px-5 sm:px-8">
         <motion.div
           initial="hidden"
@@ -54,7 +51,7 @@ export function Pricing() {
                 transition: { duration: time(0.5), ease: EASE_OUT },
               },
             }}
-            className="text-sm font-semibold uppercase tracking-widest text-kelo-600"
+            className="text-sm font-medium uppercase tracking-widest text-kelo-400"
           >
             Pricing
           </motion.p>
@@ -67,7 +64,7 @@ export function Pricing() {
                 transition: { duration: time(0.65), ease: EASE_OUT },
               },
             }}
-            className="mt-4 text-balance text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl"
+            className="mt-4 text-balance text-3xl font-normal tracking-tight text-white sm:text-4xl"
           >
             One plan. No per-visit billing.
           </motion.h2>
@@ -80,35 +77,29 @@ export function Pricing() {
           variants={scaleIn({ safe })}
           className="relative mx-auto mt-14 max-w-lg"
         >
-          {/* Halo behind the card, so it lifts off the white page. Two colours
-              layered so it reads as depth rather than a flat blue tint, and
-              slowly rotating with scroll so the card doesn't sit dead still
-              even while nothing else on it is actively animating. */}
+          {/* Halo behind the card, so it lifts off the black page — slowly
+              rotating with scroll so the card doesn't sit dead still even
+              while nothing else on it is actively animating. */}
           <motion.div
             aria-hidden="true"
             style={{ rotate: haloRotate }}
-            className="pointer-events-none absolute -inset-4 rounded-[2.5rem] bg-[radial-gradient(60%_60%_at_50%_0%,rgb(var(--kelo-200)/0.55),transparent_75%)]"
-          />
-          <motion.div
-            aria-hidden="true"
-            style={{ rotate: haloRotate }}
-            className="pointer-events-none absolute -inset-4 rounded-[2.5rem] bg-[radial-gradient(45%_45%_at_100%_100%,rgb(var(--sun-200)/0.4),transparent_75%)]"
+            className="pointer-events-none absolute -inset-4 rounded-[2.5rem] bg-[radial-gradient(60%_60%_at_50%_0%,rgb(var(--kelo-600)/0.3),transparent_75%)]"
           />
 
-          <div className="relative overflow-hidden rounded-4xl border border-slate-200 bg-white p-8 shadow-lift sm:p-10">
-            <span className="inline-flex rounded-full bg-kelo-50 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-kelo-700 ring-1 ring-inset ring-kelo-100">
+          <div className="relative overflow-hidden rounded-4xl border border-white/10 bg-white/[0.04] p-8 backdrop-blur-sm sm:p-10">
+            <span className="inline-flex rounded-full bg-kelo-500/10 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-kelo-300 ring-1 ring-inset ring-kelo-400/20">
               Per caregiver
             </span>
 
             <div className="mt-6 flex items-baseline gap-2">
-              <span className="bg-gradient-to-br from-kelo-700 to-kelo-500 bg-clip-text text-5xl font-bold tracking-tight text-transparent">
+              <span className="text-5xl font-semibold tracking-tight text-white">
                 <AnimatedNumber value={40} prefix="$" />
               </span>
-              <span className="text-base font-medium text-slate-500">
+              <span className="text-base font-medium text-white/40">
                 / year
               </span>
             </div>
-            <p className="mt-3 text-sm leading-relaxed text-slate-600">
+            <p className="mt-3 text-sm leading-relaxed text-white/50">
               Billed annually per active caregiver. Agencies, families, and
               client seats are included at no extra cost.
             </p>
@@ -118,7 +109,7 @@ export function Pricing() {
               whileInView="visible"
               viewport={viewportOnce}
               variants={staggerContainer({ safe, stagger: 0.055, delayChildren: 0.15 })}
-              className="mt-8 space-y-3 border-t border-slate-100 pt-8"
+              className="mt-8 space-y-3 border-t border-white/10 pt-8"
             >
               {INCLUDED.map((line) => (
                 <motion.li
@@ -131,7 +122,7 @@ export function Pricing() {
                       transition: { duration: time(0.4), ease: EASE_OUT },
                     },
                   }}
-                  className="flex items-start gap-3 text-sm text-slate-700"
+                  className="flex items-start gap-3 text-sm text-white/70"
                 >
                   <CheckMark />
                   <span>{line}</span>
@@ -146,7 +137,7 @@ export function Pricing() {
               </CtaButton>
             </div>
 
-            <p className="mt-4 text-center text-xs text-slate-500">
+            <p className="mt-4 text-center text-xs text-white/40">
               No card required to join early access.
             </p>
           </div>
@@ -160,7 +151,7 @@ function CheckMark() {
   return (
     <span
       aria-hidden="true"
-      className="mt-0.5 flex h-5 w-5 flex-none items-center justify-center rounded-full bg-kelo-100 text-kelo-700"
+      className="mt-0.5 flex h-5 w-5 flex-none items-center justify-center rounded-full bg-kelo-500/15 text-kelo-300"
     >
       <svg viewBox="0 0 14 14" className="h-3 w-3">
         <path

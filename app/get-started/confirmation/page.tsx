@@ -77,14 +77,14 @@ function Confirmation() {
         className="relative mx-auto flex h-20 w-20 items-center justify-center"
       >
         {safe && (
-          <span className="absolute inset-0 rounded-full bg-kelo-100 animate-pulse-ring" />
+          <span className="absolute inset-0 rounded-full bg-kelo-500/20 animate-pulse-ring" />
         )}
-        <span className="absolute inset-0 rounded-full bg-kelo-50 ring-1 ring-inset ring-kelo-100" />
+        <span className="absolute inset-0 rounded-full bg-kelo-500/10 ring-1 ring-inset ring-kelo-400/20" />
         <Burst safe={safe} />
 
         <svg
           viewBox="0 0 48 48"
-          className="relative h-10 w-10 text-kelo-600"
+          className="relative h-10 w-10 text-kelo-300"
           fill="none"
           aria-hidden="true"
         >
@@ -101,14 +101,14 @@ function Confirmation() {
 
       <motion.h1
         variants={item}
-        className="mt-8 text-balance text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl"
+        className="mt-8 text-balance text-3xl font-normal tracking-tight text-white sm:text-4xl"
       >
         You&apos;re on the list.
       </motion.h1>
 
       <motion.p
         variants={item}
-        className="mx-auto mt-4 max-w-sm text-pretty text-base leading-relaxed text-slate-600"
+        className="mx-auto mt-4 max-w-sm text-pretty text-base leading-relaxed text-white/50"
       >
         Thanks for signing up. Here&apos;s what happens next.
       </motion.p>
@@ -121,12 +121,12 @@ function Confirmation() {
           <motion.li
             key={step}
             variants={item}
-            className="flex items-start gap-3 rounded-2xl border border-slate-200 bg-white p-4 shadow-card"
+            className="living-card flex items-start gap-3 rounded-2xl border border-white/20 bg-white/[0.075] p-4 shadow-[0_14px_40px_-28px_rgba(4,7,28,.9)] backdrop-blur-xl"
           >
-            <span className="flex h-6 w-6 flex-none items-center justify-center rounded-full bg-kelo-50 text-xs font-bold text-kelo-700 ring-1 ring-inset ring-kelo-100">
+            <span className="flex h-6 w-6 flex-none items-center justify-center rounded-full bg-kelo-500/10 text-xs font-bold text-kelo-300 ring-1 ring-inset ring-kelo-400/20">
               {i + 1}
             </span>
-            <span className="text-pretty text-sm leading-relaxed text-slate-700">
+            <span className="text-pretty text-sm leading-relaxed text-white/70">
               {step}
             </span>
           </motion.li>
@@ -134,7 +134,7 @@ function Confirmation() {
       </motion.ol>
 
       <motion.div variants={item} className="mt-10">
-        <p className="text-xs font-semibold uppercase tracking-widest text-slate-500">
+        <p className="text-xs font-semibold uppercase tracking-widest text-white/40">
           Coming soon
         </p>
         <div className="mt-4 flex justify-center gap-3">
@@ -175,7 +175,7 @@ function Burst({ safe }: { safe: boolean }) {
             transition={{ duration: 0.9, delay: 0.5 + i * 0.03, ease: EASE_OUT }}
             className={cn(
               "absolute left-1/2 top-1/2 h-1.5 w-1.5 rounded-full",
-              i % 2 === 0 ? "bg-kelo-400" : "bg-sun-400",
+              i % 2 === 0 ? "bg-kelo-400" : "bg-kelo-300",
             )}
           />
         );
@@ -187,7 +187,7 @@ function Burst({ safe }: { safe: boolean }) {
 /** Placeholder badges. Swap for the official artwork once the apps are live. */
 function StoreBadge({ store }: { store: string }) {
   return (
-    <span className="inline-flex cursor-default items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-medium text-slate-500 shadow-sm">
+    <span className="inline-flex cursor-default items-center gap-2 rounded-xl border border-white/10 bg-white/[0.04] px-4 py-2.5 text-sm font-medium text-white/40">
       <svg viewBox="0 0 24 24" className="h-4 w-4" fill="currentColor" aria-hidden="true">
         <path d="M12 2 4 6.5v11L12 22l8-4.5v-11L12 2Zm0 2.3 5.8 3.3L12 10.9 6.2 7.6 12 4.3Z" />
       </svg>

@@ -1,6 +1,5 @@
 import type { Metadata, Viewport } from "next";
 
-import { IntroOverlay } from "@/components/intro-overlay";
 import { PageTransition } from "@/components/page-transition";
 import { ScrollProgress } from "@/components/scroll-progress";
 import { SiteHeader } from "@/components/site-header";
@@ -20,12 +19,27 @@ export const metadata: Metadata = {
     description:
       "Visit timers, care notes, and scheduling for home care teams. $40 per caregiver, per year.",
     type: "website",
+    images: [
+      {
+        url: "/og.png",
+        width: 1731,
+        height: 909,
+        alt: "Kelo Care — Thread of Care",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Kelo Care — Care that everyone can see",
+    description:
+      "Visit timers, care notes, and scheduling for home care teams.",
+    images: ["/og.png"],
   },
 };
 
 export const viewport: Viewport = {
-  themeColor: "#ffffff",
-  colorScheme: "light",
+  themeColor: "#060a16",
+  colorScheme: "dark",
 };
 
 export default function RootLayout({
@@ -35,7 +49,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className="min-h-screen bg-white font-sans">
+      <body className="min-h-screen bg-ink-950 font-sans">
         <a
           href="#main"
           className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[60] focus:rounded-full focus:bg-kelo-600 focus:px-5 focus:py-3 focus:text-sm focus:font-semibold focus:text-white"
@@ -43,7 +57,6 @@ export default function RootLayout({
           Skip to content
         </a>
 
-        <IntroOverlay />
         <ScrollProgress />
 
         {/* Outside PageTransition: see the note in site-header.tsx. */}

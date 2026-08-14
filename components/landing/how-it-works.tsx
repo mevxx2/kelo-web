@@ -60,7 +60,7 @@ export function HowItWorks() {
             aria-hidden="true"
             animate={{ x: [0, -30, 25, 0], y: [0, 20, -10, 0] }}
             transition={{ duration: 22, repeat: Infinity, ease: "easeInOut" }}
-            className="pointer-events-none absolute -right-24 bottom-0 h-80 w-80 rounded-full bg-sun-700/20 blur-3xl"
+            className="pointer-events-none absolute -right-24 bottom-0 h-80 w-80 rounded-full bg-kelo-500/15 blur-3xl"
           />
         </>
       )}
@@ -82,7 +82,7 @@ export function HowItWorks() {
                 transition: { duration: time(0.5), ease: EASE_OUT },
               },
             }}
-            className="text-sm font-semibold uppercase tracking-widest text-sun-400"
+            className="text-sm font-medium uppercase tracking-widest text-kelo-400"
           >
             How it works
           </motion.p>
@@ -95,7 +95,7 @@ export function HowItWorks() {
                 transition: { duration: time(0.65), ease: EASE_OUT },
               },
             }}
-            className="mt-4 text-balance text-3xl font-bold tracking-tight text-white sm:text-4xl"
+            className="mt-4 text-balance text-3xl font-normal tracking-tight text-white sm:text-4xl"
           >
             Running in an afternoon.
           </motion.h2>
@@ -112,14 +112,14 @@ export function HowItWorks() {
                 scaleY: fillScale,
                 transformOrigin: "top",
               }}
-              className="h-full w-full bg-gradient-to-b from-kelo-400 to-sun-400 shadow-[0_0_12px_rgb(var(--kelo-400)/0.6)] md:hidden"
+              className="h-full w-full bg-kelo-400 shadow-[0_0_12px_rgb(var(--kelo-400)/0.6)] md:hidden"
             />
             <motion.div
               style={{
                 scaleX: fillScale,
                 transformOrigin: "left",
               }}
-              className="hidden h-full w-full bg-gradient-to-r from-kelo-400 to-sun-400 shadow-[0_0_12px_rgb(var(--kelo-400)/0.6)] md:block"
+              className="hidden h-full w-full bg-kelo-400 shadow-[0_0_12px_rgb(var(--kelo-400)/0.6)] md:block"
             />
           </div>
 
@@ -158,7 +158,7 @@ export function HowItWorks() {
                       },
                     },
                   }}
-                  className="absolute left-0 top-0 flex h-11 w-11 items-center justify-center rounded-full bg-gradient-to-br from-kelo-500 to-sun-500 text-sm font-bold text-white shadow-[0_0_0_4px_rgb(var(--ink-950)),0_0_24px_rgb(var(--kelo-400)/0.55)] transition-transform duration-300 group-hover:scale-110 motion-reduce:transition-none motion-reduce:group-hover:scale-100"
+                  className="absolute left-0 top-0 flex h-11 w-11 items-center justify-center rounded-full bg-kelo-600 text-sm font-bold text-white shadow-[0_0_0_4px_rgb(var(--ink-950)),0_0_24px_rgb(var(--kelo-400)/0.55)] transition-transform duration-300 group-hover:scale-110 motion-reduce:transition-none motion-reduce:group-hover:scale-100"
                 >
                   {step.n}
                 </motion.span>

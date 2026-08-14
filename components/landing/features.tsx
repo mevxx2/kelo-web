@@ -3,7 +3,6 @@
 import { useRef, type ReactNode } from "react";
 import { motion, useScroll, useTransform, type Variants } from "framer-motion";
 
-import { FloatingParticles } from "@/components/ui/floating-particles";
 import { TiltCard } from "@/components/ui/tilt-card";
 import { cn } from "@/lib/utils";
 import { cardIn, staggerContainer, useMotion, viewportOnce } from "@/lib/motion";
@@ -49,15 +48,8 @@ export function Features() {
     <section
       ref={sectionRef}
       id="features"
-      className="relative overflow-hidden bg-slate-50/70 py-24 sm:py-32"
+      className="relative overflow-hidden bg-ink-950 py-24 sm:py-32"
     >
-      {/* Seams top and bottom keep this block from reading as a hard slab. */}
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-white to-transparent"
-      />
-      <FloatingParticles seed={22} count={7} />
-
       <div className="relative mx-auto max-w-6xl px-5 sm:px-8">
         <motion.div
           initial="hidden"
@@ -68,13 +60,13 @@ export function Features() {
         >
           <motion.p
             variants={cardIn({ safe, rotate: 0, y: 14 })}
-            className="text-sm font-semibold uppercase tracking-widest text-kelo-600"
+            className="text-sm font-medium uppercase tracking-widest text-kelo-400"
           >
             Features
           </motion.p>
           <motion.h2
             variants={cardIn({ safe, rotate: 0, y: 20 })}
-            className="mt-4 text-balance text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl"
+            className="mt-4 text-balance text-3xl font-normal tracking-tight text-white sm:text-4xl"
           >
             Everything a shift needs, nothing it doesn&apos;t.
           </motion.h2>
@@ -115,22 +107,19 @@ function FeatureCard({
   body: string;
 }) {
   return (
-    <TiltCard
-      variants={variants}
-      className="p-7 transition-[box-shadow] hover:ring-1 hover:ring-kelo-200"
-    >
+    <TiltCard variants={variants} className="p-7">
       <span
         className={cn(
-          "inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-kelo-50 text-kelo-600",
-          "ring-1 ring-inset ring-kelo-100 transition-all duration-300",
-          "group-hover:bg-gradient-to-br group-hover:from-kelo-600 group-hover:to-sun-500 group-hover:text-white group-hover:ring-transparent",
+          "inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-kelo-500/10 text-kelo-400",
+          "ring-1 ring-inset ring-kelo-400/20 transition-all duration-300",
+          "group-hover:bg-kelo-500 group-hover:text-white group-hover:ring-transparent",
           "motion-reduce:transition-none",
         )}
       >
         {icon}
       </span>
-      <h3 className="mt-5 text-lg font-semibold text-slate-900">{title}</h3>
-      <p className="mt-2 text-pretty text-sm leading-relaxed text-slate-600">
+      <h3 className="mt-5 text-lg font-semibold text-white">{title}</h3>
+      <p className="mt-2 text-pretty text-sm leading-relaxed text-white/50">
         {body}
       </p>
     </TiltCard>

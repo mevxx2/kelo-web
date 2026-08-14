@@ -27,16 +27,15 @@ export default function GetStartedLayout({
   const progress = activeIndex / (STEPS.length - 1);
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-white pb-24 pt-28 sm:pt-32">
-      {/* Same layered mesh as the hero, so the funnel feels like the same place. */}
+    <div className="relative min-h-screen overflow-hidden bg-[#141238] pb-24 pt-28 sm:pt-32">
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-0 bg-[radial-gradient(55%_45%_at_50%_0%,rgb(var(--kelo-100)/0.6),transparent_70%)]"
+        className="pointer-events-none absolute inset-0 bg-[radial-gradient(55%_45%_at_50%_0%,rgba(255,196,151,.14),transparent_70%),radial-gradient(50%_50%_at_15%_70%,rgba(73,67,210,.22),transparent_70%)]"
       />
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0 bg-[radial-gradient(35%_30%_at_85%_10%,rgb(var(--sun-100)/0.5),transparent_70%)]"
-      />
+      <div aria-hidden="true" className="care-grain pointer-events-none absolute inset-0 opacity-[0.055]" />
+      <svg aria-hidden="true" viewBox="0 0 1000 1300" preserveAspectRatio="none" className="pointer-events-none absolute inset-0 h-full w-full" fill="none">
+        <path d="M500 0C500 190 420 250 470 350C520 450 580 340 620 430C680 570 420 650 440 800C460 990 560 1050 500 1300" stroke="#8178ff" strokeWidth="2" className="thread-pulse" vectorEffect="non-scaling-stroke" />
+      </svg>
 
       <div className="relative mx-auto max-w-3xl px-5 sm:px-8">
         {/* Single continuous track with the step dots overlaid on top, rather
@@ -46,13 +45,13 @@ export default function GetStartedLayout({
           {/* Dots sit at 0/50/100% (below), so the track uses the same
               coordinate space — an inset track would end before reaching
               the first/last dot. */}
-          <div className="absolute inset-x-0 top-4 h-0.5 -translate-y-1/2 rounded-full bg-slate-200" />
+          <div className="absolute inset-x-0 top-4 h-0.5 -translate-y-1/2 rounded-full bg-white/10" />
           <motion.div
             initial={false}
             animate={{ scaleX: progress }}
             transition={{ duration: safe ? 0.5 : 0, ease: EASE_OUT }}
             style={{ transformOrigin: "left" }}
-            className="absolute inset-x-0 top-4 h-0.5 -translate-y-1/2 rounded-full bg-gradient-to-r from-kelo-500 to-sun-500"
+            className="absolute inset-x-0 top-4 h-0.5 -translate-y-1/2 rounded-full bg-kelo-400"
           />
 
           {STEPS.map((step, i) => {
@@ -72,8 +71,8 @@ export default function GetStartedLayout({
                     done
                       ? "bg-kelo-600 text-white"
                       : active
-                        ? "bg-white text-kelo-700 ring-2 ring-kelo-600"
-                        : "bg-slate-100 text-slate-400 ring-1 ring-inset ring-slate-200",
+                        ? "bg-[#17143a]/90 text-kelo-200 ring-2 ring-kelo-400"
+                        : "bg-white/5 text-white/30 ring-1 ring-inset ring-white/10",
                   )}
                 >
                   {done ? <CheckIcon /> : i + 1}
@@ -95,9 +94,7 @@ export default function GetStartedLayout({
                 <span
                   className={cn(
                     "mt-2 whitespace-nowrap text-xs font-medium transition-colors duration-300",
-                    // slate-500 is the lightest grey that still clears WCAG AA
-                    // on white (4.8:1); slate-400 does not.
-                    active ? "text-kelo-700" : "text-slate-500",
+                    active ? "text-kelo-300" : "text-white/40",
                   )}
                 >
                   {step.label}

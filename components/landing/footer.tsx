@@ -112,7 +112,7 @@ export function Footer() {
                         {link.label}
                         <span
                           aria-hidden="true"
-                          className="absolute inset-x-0 -bottom-0.5 h-px origin-left scale-x-0 bg-gradient-to-r from-kelo-400 to-sun-400 transition-transform duration-300 group-hover:scale-x-100 motion-reduce:transition-none"
+                          className="absolute inset-x-0 -bottom-0.5 h-px origin-left scale-x-0 bg-kelo-400 transition-transform duration-300 group-hover:scale-x-100 motion-reduce:transition-none"
                         />
                       </span>
                     </Link>
@@ -124,10 +124,10 @@ export function Footer() {
         </div>
 
         <div className="mt-14 flex flex-col items-start justify-between gap-4 border-t border-white/10 pt-8 sm:flex-row sm:items-center">
-          <p className="text-sm text-slate-500">
+          <p className="text-sm text-white/40">
             © {new Date().getFullYear()} Kelo Care. All rights reserved.
           </p>
-          <p className="text-sm text-slate-500">Made for caregivers.</p>
+          <p className="text-sm text-white/40">Made for caregivers.</p>
         </div>
       </motion.div>
     </footer>
@@ -149,7 +149,7 @@ function Social({
       aria-label={label}
       target={href.startsWith("http") ? "_blank" : undefined}
       rel={href.startsWith("http") ? "noreferrer noopener" : undefined}
-      className="flex h-9 w-9 items-center justify-center rounded-full bg-white/10 text-slate-300 transition-all duration-300 hover:-translate-y-0.5 hover:bg-gradient-to-br hover:from-kelo-500 hover:to-sun-500 hover:text-white motion-reduce:transition-none motion-reduce:hover:translate-y-0"
+      className="flex h-9 w-9 items-center justify-center rounded-full bg-white/10 text-slate-300 transition-all duration-300 hover:-translate-y-0.5 hover:bg-kelo-600 hover:text-white motion-reduce:transition-none motion-reduce:hover:translate-y-0"
     >
       <svg viewBox="0 0 24 24" fill="currentColor" className="h-4 w-4" aria-hidden="true">
         {children}

@@ -37,30 +37,20 @@ const VARIANTS: Record<Variant, string> = {
   // gradient swap would snap instead of animate. Hover feedback instead comes
   // from the existing scale/shadow/sheen, which do animate.
   primary:
-    "bg-gradient-to-br from-kelo-500 to-kelo-700 text-white shadow-glow hover:shadow-lift focus-visible:outline-kelo-700",
+    "heartbeat-button bg-gradient-to-br from-kelo-500 to-kelo-700 text-white shadow-glow hover:shadow-lift focus-visible:outline-kelo-400",
   secondary:
-    "bg-white text-slate-900 ring-1 ring-inset ring-slate-200 shadow-card hover:ring-kelo-300 hover:text-kelo-700",
-  ghost: "bg-transparent text-slate-700 hover:text-kelo-700 hover:bg-kelo-50",
+    "bg-white/8 text-white ring-1 ring-inset ring-white/15 hover:bg-white/14 hover:ring-white/25 focus-visible:outline-kelo-400",
+  ghost: "bg-transparent text-white/70 hover:text-white hover:bg-white/5",
   inverse:
     "bg-white text-kelo-700 shadow-lift hover:bg-kelo-50 focus-visible:outline-white",
-  // "Liquid glass" — a thick frosted pane rather than a flat translucent
-  // tint: a bright inset rim catches light at the top edge, a deep tinted
-  // shadow gives it glass thickness, and a diagonal specular streak (added
-  // separately in `inner`, since it needs its own layer) sits on top like a
-  // reflection. `glass` is the saturated blue pane (primary CTA); `glassOutline`
-  // is the same construction in a lighter, unsaturated pane (secondary CTA).
-  glass: cn(
-    "bg-gradient-to-br from-kelo-400/60 via-kelo-600/55 to-kelo-800/65 text-white backdrop-blur-2xl",
-    "ring-1 ring-inset ring-white/50",
-    "hover:from-kelo-400/70 hover:via-kelo-600/65 hover:to-kelo-800/75 focus-visible:outline-white",
-    "shadow-[0_16px_40px_-12px_rgb(37_96_235/0.55),inset_0_1.5px_1px_rgb(255_255_255/0.8),inset_0_-10px_18px_-10px_rgb(15_35_90/0.45)]",
-  ),
-  glassOutline: cn(
-    "bg-white/25 text-slate-900 backdrop-blur-2xl",
-    "ring-1 ring-inset ring-white/60",
-    "hover:bg-white/40 focus-visible:outline-kelo-700",
-    "shadow-[0_16px_36px_-14px_rgb(15_23_42/0.3),inset_0_1.5px_1px_rgb(255_255_255/0.9),inset_0_-10px_18px_-10px_rgb(15_23_42/0.06)]",
-  ),
+  // Small, restrained glass pills — a light translucent pane with a subtle
+  // ring, not a thick glowing slab. `glass` mirrors a light pill with a
+  // saturated accent-colored label (the primary action); `glassOutline` is a
+  // quieter grey-glass pill for the secondary action.
+  glass:
+    "bg-white/90 text-kelo-700 shadow-[0_8px_24px_-8px_rgb(0_0_0/0.5)] ring-1 ring-inset ring-white/60 backdrop-blur-xl hover:bg-white focus-visible:outline-kelo-400",
+  glassOutline:
+    "bg-white/10 text-white ring-1 ring-inset ring-white/20 backdrop-blur-xl hover:bg-white/16 focus-visible:outline-white",
 };
 
 const SIZES: Record<Size, string> = {
@@ -121,30 +111,8 @@ export function CtaButton({
     className,
   );
 
-  const isLiquidGlass = variant === "glass" || variant === "glassOutline";
-
   const inner = (
     <>
-      {isLiquidGlass && (
-        <>
-          {/* Static diagonal reflection — the part that actually reads as
-              "glass" rather than just a translucent tint. */}
-          <span
-            aria-hidden="true"
-            className="pointer-events-none absolute inset-0"
-            style={{
-              background:
-                "linear-gradient(115deg, transparent 22%, rgb(255 255 255 / 0.55) 40%, rgb(255 255 255 / 0.12) 53%, transparent 68%)",
-            }}
-          />
-          {/* Thin bright top edge, like light catching the rim of the pane. */}
-          <span
-            aria-hidden="true"
-            className="pointer-events-none absolute inset-x-3 top-0 h-px bg-white/80"
-          />
-        </>
-      )}
-
       {/* Sheen sweep on hover. Purely decorative, sits under the label. */}
       <span
         aria-hidden="true"

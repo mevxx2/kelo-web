@@ -26,8 +26,8 @@ const ink = Object.fromEntries(
 ) as Record<string, string>;
 
 const config: Config = {
-  // Light theme only. Kept as "class" so a stray OS dark-mode preference can
-  // never flip the site — nothing ever adds the class.
+  // Dark theme only. Kept as "class" (rather than "media") so a stray OS
+  // light-mode preference can never flip the site — nothing ever adds the class.
   darkMode: "class",
   content: [
     "./app/**/*.{ts,tsx}",

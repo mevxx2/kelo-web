@@ -82,7 +82,7 @@ export default function RoleSelectionPage() {
               transition: { duration: time(0.6), ease: EASE_OUT },
             },
           }}
-          className="text-balance text-center text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl"
+          className="text-balance text-center text-3xl font-normal tracking-tight text-white sm:text-4xl"
         >
           Who&apos;s this for?
         </motion.h1>
@@ -96,7 +96,7 @@ export default function RoleSelectionPage() {
               transition: { duration: time(0.5), ease: EASE_OUT },
             },
           }}
-          className="mx-auto mt-4 max-w-md text-pretty text-center text-base leading-relaxed text-slate-600"
+          className="mx-auto mt-4 max-w-md text-pretty text-center text-base leading-relaxed text-white/50"
         >
           We&apos;ll tailor setup to how you&apos;ll actually use Kelo Care.
         </motion.p>
@@ -122,18 +122,18 @@ export default function RoleSelectionPage() {
                 whileTap={safe ? { scale: 0.985 } : undefined}
                 transition={{ duration: 0.3, ease: EASE_OUT }}
                 className={cn(
-                  "group relative flex flex-col rounded-3xl border p-6 text-left backdrop-blur-sm transition-colors duration-300",
+                  "living-card group relative flex flex-col rounded-3xl border p-6 text-left backdrop-blur-xl transition-colors duration-300",
                   isSelected
-                    ? "border-kelo-600 bg-kelo-50/60 shadow-lift"
-                    : "border-slate-200 bg-white/80 shadow-card hover:border-kelo-300",
+                    ? "border-kelo-300/70 bg-kelo-500/15 shadow-lift"
+                    : "border-white/20 bg-white/[0.07] shadow-card hover:border-kelo-300/50",
                 )}
               >
                 <span
                   className={cn(
                     "inline-flex h-11 w-11 items-center justify-center rounded-2xl transition-colors duration-300",
                     isSelected
-                      ? "bg-gradient-to-br from-kelo-500 to-sun-500 text-white"
-                      : "bg-kelo-50 text-kelo-600 ring-1 ring-inset ring-kelo-100 group-hover:bg-kelo-100",
+                      ? "bg-kelo-500 text-white"
+                      : "bg-kelo-500/10 text-kelo-400 ring-1 ring-inset ring-kelo-400/20 group-hover:bg-kelo-500/15",
                   )}
                 >
                   <svg viewBox="0 0 24 24" className="h-6 w-6" aria-hidden="true">
@@ -141,10 +141,10 @@ export default function RoleSelectionPage() {
                   </svg>
                 </span>
 
-                <span className="mt-4 text-base font-semibold text-slate-900">
+                <span className="mt-4 text-base font-semibold text-white">
                   {role.title}
                 </span>
-                <span className="mt-1.5 text-pretty text-sm leading-relaxed text-slate-600">
+                <span className="mt-1.5 text-pretty text-sm leading-relaxed text-white/50">
                   {role.body}
                 </span>
 
@@ -156,7 +156,7 @@ export default function RoleSelectionPage() {
                       animate={{ scale: 1, opacity: 1 }}
                       exit={safe ? { scale: 0, opacity: 0 } : { opacity: 0 }}
                       transition={SPRING_SNAPPY}
-                      className="absolute right-4 top-4 flex h-6 w-6 items-center justify-center rounded-full bg-gradient-to-br from-kelo-500 to-sun-500 text-white"
+                      className="absolute right-4 top-4 flex h-6 w-6 items-center justify-center rounded-full bg-kelo-500 text-white"
                     >
                       <svg viewBox="0 0 14 14" className="h-3.5 w-3.5" aria-hidden="true">
                         <path

@@ -31,7 +31,7 @@ export function FinalCta() {
             aria-hidden="true"
             animate={{ x: [0, 30, -40, 0], y: [0, -20, 10, 0] }}
             transition={{ duration: 25, repeat: Infinity, ease: "easeInOut" }}
-            className="pointer-events-none absolute bottom-10 left-1/3 h-64 w-64 rounded-full bg-sun-400/20 blur-3xl"
+            className="pointer-events-none absolute bottom-10 left-1/3 h-64 w-64 rounded-full bg-kelo-300/20 blur-3xl"
           />
         </>
       )}
@@ -57,7 +57,7 @@ export function FinalCta() {
               transition: { duration: time(0.7), ease: EASE_OUT },
             },
           }}
-          className="text-balance text-3xl font-bold tracking-tight text-white sm:text-5xl"
+          className="text-balance text-3xl font-normal tracking-tight text-white sm:text-5xl"
         >
           Give every shift a shared memory.
         </motion.h2>

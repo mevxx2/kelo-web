@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 
-import { FloatingParticles } from "@/components/ui/floating-particles";
 import { cn } from "@/lib/utils";
 import { staggerContainer, useMotion, viewportOnce, EASE_OUT } from "@/lib/motion";
 
@@ -40,9 +39,7 @@ export function Faq() {
   const [open, setOpen] = useState<number | null>(0);
 
   return (
-    <section id="faq" className="relative overflow-hidden bg-white py-24 sm:py-32">
-      <FloatingParticles seed={55} count={5} />
-
+    <section id="faq" className="relative overflow-hidden bg-ink-950 py-24 sm:py-32">
       <div className="relative mx-auto max-w-3xl px-5 sm:px-8">
         <motion.h2
           initial="hidden"
@@ -56,7 +53,7 @@ export function Faq() {
               transition: { duration: time(0.6), ease: EASE_OUT },
             },
           }}
-          className="text-balance text-center text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl"
+          className="text-balance text-center text-3xl font-normal tracking-tight text-white sm:text-4xl"
         >
           Questions we get asked.
         </motion.h2>
@@ -66,7 +63,7 @@ export function Faq() {
           whileInView="visible"
           viewport={viewportOnce}
           variants={staggerContainer({ safe, stagger: 0.06, delayChildren: 0.1 })}
-          className="mt-12 divide-y divide-slate-100 rounded-3xl border border-slate-200/80 bg-white p-2 shadow-card sm:p-3"
+          className="mt-12 divide-y divide-white/10 rounded-3xl border border-white/10 bg-white/[0.04] p-2 backdrop-blur-sm sm:p-3"
         >
           {FAQS.map((faq, i) => {
             const isOpen = open === i;
@@ -90,14 +87,14 @@ export function Faq() {
                     aria-expanded={isOpen}
                     aria-controls={`faq-panel-${i}`}
                     id={`faq-trigger-${i}`}
-                    className="group flex w-full items-center justify-between gap-6 rounded-2xl px-4 py-5 text-left transition-colors hover:bg-slate-50"
+                    className="group flex w-full items-center justify-between gap-6 rounded-2xl px-4 py-5 text-left transition-colors hover:bg-white/5"
                   >
                     <span
                       className={cn(
                         "text-base font-semibold transition-colors duration-200",
                         isOpen
-                          ? "text-kelo-700"
-                          : "text-slate-900 group-hover:text-kelo-700",
+                          ? "text-kelo-300"
+                          : "text-white group-hover:text-kelo-300",
                       )}
                     >
                       {faq.q}
@@ -110,7 +107,7 @@ export function Faq() {
                         "flex h-8 w-8 flex-none items-center justify-center rounded-full transition-colors duration-200",
                         isOpen
                           ? "bg-kelo-600 text-white"
-                          : "bg-slate-100 text-slate-500 group-hover:bg-kelo-50 group-hover:text-kelo-700",
+                          : "bg-white/10 text-white/50 group-hover:bg-kelo-500/20 group-hover:text-kelo-300",
                       )}
                     >
                       <svg viewBox="0 0 16 16" className="h-4 w-4" aria-hidden="true">
@@ -142,7 +139,7 @@ export function Faq() {
                       }}
                       className="overflow-hidden"
                     >
-                      <p className="px-4 pb-6 pr-14 text-pretty text-sm leading-relaxed text-slate-600">
+                      <p className="px-4 pb-6 pr-14 text-pretty text-sm leading-relaxed text-white/50">
                         {faq.a}
                       </p>
                     </motion.div>

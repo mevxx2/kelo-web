@@ -89,8 +89,8 @@ export function Nav() {
           className={cn(
             "flex items-center justify-between gap-4 rounded-full px-3.5 py-2.5 transition-[background-color,box-shadow,backdrop-filter] duration-500 sm:px-5 sm:py-3",
             solid
-              ? "bg-white/85 shadow-lift ring-1 ring-slate-200/80 backdrop-blur-xl"
-              : "bg-white/30 shadow-card ring-1 ring-white/40 backdrop-blur-md",
+              ? "bg-ink-900/85 shadow-lift ring-1 ring-white/10 backdrop-blur-xl"
+              : "bg-white/5 shadow-card ring-1 ring-white/10 backdrop-blur-md",
           )}
           aria-label="Main"
         >
@@ -109,22 +109,11 @@ export function Nav() {
 
               return (
                 <li key={link.href} className="relative">
-                  <AnimatePresence>
-                    {isActive && (
-                      <motion.span
-                        layoutId="nav-active-pill"
-                        transition={{ type: "spring", stiffness: 380, damping: 32 }}
-                        className="absolute inset-0 rounded-full bg-kelo-50 ring-1 ring-inset ring-kelo-100"
-                      />
-                    )}
-                  </AnimatePresence>
                   <Link
                     href={link.href}
                     className={cn(
-                      "relative z-10 block whitespace-nowrap px-4 py-2 text-sm font-medium transition-colors",
-                      isActive
-                        ? "text-kelo-700"
-                        : "text-slate-600 hover:text-slate-900",
+                      "nav-underline relative z-10 block whitespace-nowrap px-4 py-2 text-sm font-medium text-white/65",
+                      isActive && "text-white",
                     )}
                   >
                     {link.label}
@@ -147,7 +136,7 @@ export function Nav() {
               aria-expanded={menuOpen}
               aria-controls="mobile-menu"
               aria-label={menuOpen ? "Close menu" : "Open menu"}
-              className="flex h-10 w-10 items-center justify-center rounded-full text-slate-700 transition-colors hover:bg-slate-900/5 md:hidden"
+              className="flex h-10 w-10 items-center justify-center rounded-full text-white/70 transition-colors hover:bg-white/10 md:hidden"
             >
               <MenuIcon open={menuOpen} />
             </button>
@@ -162,7 +151,7 @@ export function Nav() {
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={safe ? { opacity: 0, y: -8, scale: 0.98 } : { opacity: 0 }}
               transition={{ duration: safe ? 0.24 : 0, ease: EASE_OUT }}
-              className="absolute inset-x-0 top-full z-40 mt-2 overflow-hidden rounded-3xl border border-slate-200/80 bg-white/95 shadow-lift backdrop-blur-xl md:hidden"
+              className="absolute inset-x-0 top-full z-40 mt-2 overflow-hidden rounded-3xl border border-white/10 bg-ink-900/95 shadow-lift backdrop-blur-xl md:hidden"
             >
               <ul className="space-y-1 p-3">
                 {LINKS.map((link) => (
@@ -170,7 +159,7 @@ export function Nav() {
                     <Link
                       href={link.href}
                       onClick={() => setMenuOpen(false)}
-                      className="block rounded-2xl px-4 py-3 text-base font-medium text-slate-700 transition-colors hover:bg-kelo-50 hover:text-kelo-700"
+                      className="block rounded-2xl px-4 py-3 text-base font-medium text-white/70 transition-colors hover:bg-white/5 hover:text-kelo-300"
                     >
                       {link.label}
                     </Link>

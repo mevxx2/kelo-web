@@ -37,7 +37,7 @@ function FunnelHeader() {
       transition={{ duration: safe ? 0.45 : 0.15, ease: EASE_OUT }}
       className="fixed inset-x-0 top-0 z-50 flex justify-center px-4 pt-3 sm:pt-4"
     >
-      <div className="flex w-full max-w-3xl items-center justify-between gap-3 rounded-full bg-white/85 px-4 py-2.5 shadow-lift ring-1 ring-slate-200/80 backdrop-blur-xl sm:px-5 sm:py-3">
+        <div className="flex w-full max-w-3xl items-center justify-between gap-3 rounded-full border border-white/15 bg-white/[0.075] px-4 py-2.5 shadow-lift backdrop-blur-xl sm:px-5 sm:py-3">
         <Link
           href="/"
           className="group flex items-center"
@@ -54,7 +54,7 @@ function FunnelHeader() {
 
         <Link
           href="/"
-          className="group inline-flex items-center gap-1.5 text-sm font-medium text-slate-600 transition-colors hover:text-kelo-700"
+          className="nav-underline group inline-flex items-center gap-1.5 text-sm font-medium text-white/65"
         >
           <svg viewBox="0 0 20 20" fill="none" className="h-4 w-4 transition-transform duration-300 group-hover:-translate-x-0.5 motion-reduce:transition-none motion-reduce:group-hover:translate-x-0" aria-hidden="true">
             <path

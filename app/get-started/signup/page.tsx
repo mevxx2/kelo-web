@@ -106,11 +106,11 @@ function SignupForm() {
     >
       {roleLabel && (
         <motion.div variants={field} className="flex justify-center">
-          <span className="inline-flex items-center gap-2 rounded-full bg-kelo-50 px-3.5 py-1.5 text-xs font-semibold text-kelo-700 ring-1 ring-inset ring-kelo-100">
+          <span className="inline-flex items-center gap-2 rounded-full bg-kelo-500/10 px-3.5 py-1.5 text-xs font-semibold text-kelo-300 ring-1 ring-inset ring-kelo-400/20">
             {roleLabel}
             <Link
               href="/get-started"
-              className="text-kelo-600 underline underline-offset-2 hover:text-kelo-800"
+              className="text-kelo-400 underline underline-offset-2 hover:text-kelo-300"
             >
               change
             </Link>
@@ -120,14 +120,14 @@ function SignupForm() {
 
       <motion.h1
         variants={field}
-        className="mt-6 text-balance text-center text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl"
+        className="mt-6 text-balance text-center text-3xl font-normal tracking-tight text-white sm:text-4xl"
       >
         Join the early access list.
       </motion.h1>
 
       <motion.p
         variants={field}
-        className="mx-auto mt-4 max-w-sm text-pretty text-center text-base leading-relaxed text-slate-600"
+        className="mx-auto mt-4 max-w-sm text-pretty text-center text-base leading-relaxed text-white/50"
       >
         We&apos;ll email you when your spot opens up. No card, no commitment.
       </motion.p>
@@ -136,7 +136,7 @@ function SignupForm() {
         variants={field}
         onSubmit={handleSubmit}
         noValidate
-        className="mt-10 rounded-3xl border border-slate-200 bg-white/80 p-7 shadow-card backdrop-blur-xl sm:p-8"
+        className="living-card mt-10 rounded-[2rem] border border-white/20 bg-white/[0.075] p-7 shadow-[0_22px_70px_-34px_rgba(4,7,28,.9),inset_0_1px_0_rgba(255,255,255,.18)] backdrop-blur-xl sm:p-8"
       >
         <Field
           id="name"
@@ -192,7 +192,7 @@ function SignupForm() {
           </CtaButton>
         </div>
 
-        <p className="mt-4 text-center text-xs leading-relaxed text-slate-500">
+        <p className="mt-4 text-center text-xs leading-relaxed text-white/40">
           By joining you agree to receive product updates. Unsubscribe any time.
         </p>
       </motion.form>
@@ -225,7 +225,7 @@ function Field({
     <div>
       <label
         htmlFor={id}
-        className="block text-sm font-medium text-slate-700"
+        className="block text-sm font-medium text-white/70"
       >
         {label}
       </label>
@@ -240,11 +240,11 @@ function Field({
         aria-describedby={error ? `${id}-error` : undefined}
         onChange={(event) => onChange(event.target.value)}
         className={cn(
-          "mt-2 block w-full rounded-2xl border bg-white px-4 py-3 text-base text-slate-900 shadow-sm outline-none transition-[border-color,box-shadow] duration-200",
-          "placeholder:text-slate-400",
+          "mt-2 block w-full rounded-2xl border bg-white/[0.08] px-4 py-3 text-base text-white outline-none backdrop-blur-md transition-[border-color,box-shadow] duration-200",
+          "placeholder:text-white/30",
           error
-            ? "border-red-300 focus:border-red-500 focus:ring-4 focus:ring-red-500/10"
-            : "border-slate-200 focus:border-kelo-500 focus:ring-4 focus:ring-kelo-500/15",
+            ? "border-red-400/50 focus:border-red-400 focus:ring-4 focus:ring-red-500/10"
+            : "border-white/15 focus:border-kelo-400 focus:ring-4 focus:ring-kelo-500/15",
         )}
       />
 
@@ -297,10 +297,10 @@ function Spinner() {
 function FormSkeleton() {
   return (
     <div className="mx-auto max-w-md animate-pulse">
-      <div className="mx-auto h-6 w-28 rounded-full bg-slate-100" />
-      <div className="mx-auto mt-6 h-9 w-3/4 rounded-lg bg-slate-100" />
-      <div className="mx-auto mt-4 h-5 w-2/3 rounded-lg bg-slate-100" />
-      <div className="mt-10 h-72 rounded-3xl bg-slate-100" />
+      <div className="mx-auto h-6 w-28 rounded-full bg-white/5" />
+      <div className="mx-auto mt-6 h-9 w-3/4 rounded-lg bg-white/5" />
+      <div className="mx-auto mt-4 h-5 w-2/3 rounded-lg bg-white/5" />
+      <div className="mt-10 h-72 rounded-3xl bg-white/5" />
     </div>
   );
 }
