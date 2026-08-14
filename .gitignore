@@ -2,6 +2,7 @@ node_modules/
 .next/
 .next-dev/
 out/
+dist/
 build/
 .env*.local
 .DS_Store
