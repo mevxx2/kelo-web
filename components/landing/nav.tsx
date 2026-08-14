@@ -7,6 +7,7 @@ import { AnimatePresence, motion } from "framer-motion";
 
 import { cn } from "@/lib/utils";
 import { CtaButton } from "@/components/ui/button";
+import { ThemeToggle } from "@/components/theme-toggle";
 import { EASE_OUT, useMotionSafe } from "@/lib/motion";
 
 const LINKS = [
@@ -124,6 +125,7 @@ export function Nav() {
           </ul>
 
           <div className="flex items-center gap-3">
+            <ThemeToggle />
             <div className="hidden md:block">
               <CtaButton href="/get-started" size="md">
                 Get started

@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, useScroll, useSpring, useTransform } from "framer-motion";
-import { useRef, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 
 import { useMotionSafe } from "@/lib/motion";
 
@@ -11,18 +11,28 @@ const THREAD_PATH =
 export function CareCanvas({ children }: { children: ReactNode }) {
   const ref = useRef<HTMLDivElement>(null);
   const safe = useMotionSafe();
+  const [light, setLight] = useState(false);
+
+  useEffect(() => {
+    const sync = () => setLight(document.documentElement.dataset.theme === "light");
+    sync();
+    window.addEventListener("kelo-theme-change", sync);
+    return () => window.removeEventListener("kelo-theme-change", sync);
+  }, []);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end end"] });
   const progress = useSpring(scrollYProgress, { stiffness: 70, damping: 24, restDelta: 0.001 });
   const pathLength = useTransform(progress, (value) => (safe ? value : 1));
   const backgroundColor = useTransform(
     progress,
     [0, 0.24, 0.62, 1],
-    ["#211b2c", "#172044", "#121b4e", "#100d29"],
+    light
+      ? ["#f7e9df", "#edf0ff", "#dfe5ff", "#e8e3f3"]
+      : ["#211b2c", "#172044", "#121b4e", "#100d29"],
   );
 
   return (
     <motion.div ref={ref} style={{ backgroundColor }} className="care-canvas relative isolate overflow-hidden">
-      <div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(255,194,142,.2),transparent_22%),radial-gradient(circle_at_12%_46%,rgba(66,96,210,.18),transparent_28%),radial-gradient(circle_at_86%_70%,rgba(50,0,202,.17),transparent_28%)]" />
+      <div aria-hidden="true" className="care-ambient pointer-events-none absolute inset-0" />
       <div aria-hidden="true" className="care-grain pointer-events-none absolute inset-0 z-[1] opacity-[0.055]" />
       <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-0 z-[2] h-full">
         <svg viewBox="0 0 1000 8000" preserveAspectRatio="none" className="h-full w-full overflow-visible" fill="none">

@@ -38,8 +38,11 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#060a16",
-  colorScheme: "dark",
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#f6ede8" },
+    { media: "(prefers-color-scheme: dark)", color: "#100d29" },
+  ],
+  colorScheme: "dark light",
 };
 
 export default function RootLayout({
@@ -48,7 +51,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var saved=localStorage.getItem('kelo-theme');var theme=saved==='light'||saved==='dark'?saved:(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.dataset.theme=theme;document.documentElement.style.colorScheme=theme}catch(e){document.documentElement.dataset.theme='dark'}})()`,
+          }}
+        />
+      </head>
       <body className="min-h-screen bg-ink-950 font-sans">
         <a
           href="#main"

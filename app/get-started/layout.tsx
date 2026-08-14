@@ -27,7 +27,7 @@ export default function GetStartedLayout({
   const progress = activeIndex / (STEPS.length - 1);
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-[#141238] pb-24 pt-28 sm:pt-32">
+    <div className="theme-surface relative min-h-screen overflow-hidden bg-[#141238] pb-24 pt-28 sm:pt-32">
       <div
         aria-hidden="true"
         className="pointer-events-none absolute inset-0 bg-[radial-gradient(55%_45%_at_50%_0%,rgba(255,196,151,.14),transparent_70%),radial-gradient(50%_50%_at_15%_70%,rgba(73,67,210,.22),transparent_70%)]"

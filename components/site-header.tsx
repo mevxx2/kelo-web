@@ -7,6 +7,7 @@ import { motion } from "framer-motion";
 
 import { Nav } from "@/components/landing/nav";
 import { EASE_OUT, useMotionSafe } from "@/lib/motion";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 /*
  * Route-aware header.
@@ -52,21 +53,18 @@ function FunnelHeader() {
           />
         </Link>
 
-        <Link
-          href="/"
-          className="nav-underline group inline-flex items-center gap-1.5 text-sm font-medium text-white/65"
-        >
-          <svg viewBox="0 0 20 20" fill="none" className="h-4 w-4 transition-transform duration-300 group-hover:-translate-x-0.5 motion-reduce:transition-none motion-reduce:group-hover:translate-x-0" aria-hidden="true">
-            <path
-              d="M16 10H4m0 0 4.5-4.5M4 10l4.5 4.5"
-              stroke="currentColor"
-              strokeWidth="1.75"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
-          Back to site
-        </Link>
+        <div className="flex items-center gap-3">
+          <ThemeToggle />
+          <Link
+            href="/"
+            className="nav-underline group inline-flex items-center gap-1.5 text-sm font-medium text-white/65"
+          >
+            <svg viewBox="0 0 20 20" fill="none" className="h-4 w-4 transition-transform duration-300 group-hover:-translate-x-0.5 motion-reduce:transition-none motion-reduce:group-hover:translate-x-0" aria-hidden="true">
+              <path d="M16 10H4m0 0 4.5-4.5M4 10l4.5 4.5" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+            Back to site
+          </Link>
+        </div>
       </div>
     </motion.header>
   );
