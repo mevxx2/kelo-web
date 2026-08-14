@@ -99,9 +99,19 @@
 
 .care-ambient {
   background:
-    radial-gradient(circle at 50% 0%, rgba(255, 194, 142, 0.2), transparent 22%),
-    radial-gradient(circle at 12% 46%, rgba(66, 96, 210, 0.18), transparent 28%),
+    radial-gradient(circle at 50% 0%, rgba(50, 0, 202, 0.06), transparent 22%),
+    radial-gradient(circle at 12% 46%, rgba(66, 96, 210, 0.14), transparent 28%),
     radial-gradient(circle at 86% 70%, rgba(50, 0, 202, 0.17), transparent 28%);
+}
+
+html:not([data-theme="light"]) #hero [class*="text-white/"] {
+  color: #ffffff !important;
+}
+
+html:not([data-theme="light"]) #hero .thread-text {
+  background: none;
+  color: #ffffff;
+  -webkit-text-fill-color: #ffffff;
 }
 
 .care-grain {

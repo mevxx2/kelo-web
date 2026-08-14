@@ -27,7 +27,7 @@ export function CareCanvas({ children }: { children: ReactNode }) {
     [0, 0.24, 0.62, 1],
     light
       ? ["#ffffff", "#f8faff", "#f2f5ff", "#f8f7ff"]
-      : ["#211b2c", "#172044", "#121b4e", "#100d29"],
+      : ["#000000", "#05050a", "#0b1240", "#100d29"],
   );
 
   return (
