@@ -22,13 +22,17 @@ export function SiteHeader() {
   const pathname = usePathname();
 
   if (pathname.startsWith("/get-started")) {
-    return <FunnelHeader />;
+    return <FunnelHeader backHref="/" backLabel="Back to site" />;
+  }
+
+  if (pathname.startsWith("/for-agencies/contact")) {
+    return <FunnelHeader backHref="/for-agencies" backLabel="Back to agencies" />;
   }
 
   return <Nav />;
 }
 
-function FunnelHeader() {
+function FunnelHeader({ backHref, backLabel }: { backHref: string; backLabel: string }) {
   const safe = useMotionSafe();
 
   return (
@@ -40,9 +44,9 @@ function FunnelHeader() {
     >
         <div className="flex w-full max-w-3xl items-center justify-between gap-3 rounded-full border border-white/15 bg-white/[0.075] px-4 py-2.5 shadow-lift backdrop-blur-xl sm:px-5 sm:py-3">
         <Link
-          href="/"
+          href={backHref}
           className="group flex items-center"
-          aria-label="Kelo Care home"
+          aria-label={backLabel}
         >
           <Image
             src="/images/logo.png"
@@ -62,7 +66,7 @@ function FunnelHeader() {
             <svg viewBox="0 0 20 20" fill="none" className="h-4 w-4 transition-transform duration-300 group-hover:-translate-x-0.5 motion-reduce:transition-none motion-reduce:group-hover:translate-x-0" aria-hidden="true">
               <path d="M16 10H4m0 0 4.5-4.5M4 10l4.5 4.5" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
-            Back to site
+            {backLabel}
           </Link>
         </div>
       </div>

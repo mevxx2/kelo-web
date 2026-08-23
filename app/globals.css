@@ -105,6 +105,13 @@
     radial-gradient(circle at 86% 70%, rgba(50, 0, 202, 0.17), transparent 28%);
 }
 
+.care-canvas[data-care-variant="agency"] .care-ambient {
+  background:
+    radial-gradient(circle at 52% 0%, rgba(74, 118, 255, 0.18), transparent 28%),
+    radial-gradient(circle at 10% 38%, rgba(86, 78, 224, 0.13), transparent 30%),
+    radial-gradient(circle at 88% 68%, rgba(41, 73, 176, 0.13), transparent 32%);
+}
+
 html:not([data-theme="light"]) #hero [class*="text-white/"] {
   color: #ffffff !important;
 }
@@ -236,6 +243,13 @@ html[data-theme="light"] .care-ambient {
     radial-gradient(circle at 50% 0%, rgba(108, 128, 255, 0.08), transparent 24%),
     radial-gradient(circle at 12% 46%, rgba(90, 108, 225, 0.09), transparent 30%),
     radial-gradient(circle at 86% 70%, rgba(79, 55, 190, 0.07), transparent 30%);
+}
+
+html[data-theme="light"] .care-canvas[data-care-variant="agency"] .care-ambient {
+  background:
+    radial-gradient(circle at 52% 0%, rgba(72, 112, 235, 0.1), transparent 27%),
+    radial-gradient(circle at 12% 44%, rgba(84, 99, 219, 0.08), transparent 30%),
+    radial-gradient(circle at 86% 70%, rgba(74, 61, 191, 0.06), transparent 31%);
 }
 
 html[data-theme="light"] .care-grain {

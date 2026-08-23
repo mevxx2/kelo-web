@@ -9,7 +9,7 @@ import { staggerContainer, useMotion, viewportOnce, EASE_OUT } from "@/lib/motio
 const FAQS = [
   {
     q: "Do caregivers need to be tech-savvy to use it?",
-    a: "No. The whole visit flow is two taps — start on arrival, end on the way out. Most caregivers are running their first visit within a minute of installing the app.",
+    a: "No. The whole visit flow is two taps: start on arrival, end on the way out. Most caregivers are running their first visit within a minute of installing the app.",
   },
   {
     q: "What happens if there's no signal at a client's home?",

@@ -8,13 +8,13 @@ import "./globals.css";
 export const metadata: Metadata = {
   metadataBase: new URL("https://kelocare.com"),
   title: {
-    default: "Kelo Care — Care that everyone can see",
+    default: "Kelo Care: Care that everyone can see",
     template: "%s · Kelo Care",
   },
   description:
-    "Kelo Care keeps caregivers, agencies, and families working from the same picture — visit timers, care notes, and scheduling in one app. $40 per caregiver, per year.",
+    "Kelo Care keeps caregivers, agencies, and families working from the same picture: visit timers, care notes, and scheduling in one app. $40 per caregiver, per year.",
   openGraph: {
-    title: "Kelo Care — Care that everyone can see",
+    title: "Kelo Care: Care that everyone can see",
     description:
       "Visit timers, care notes, and scheduling for home care teams. $40 per caregiver, per year.",
     type: "website",
@@ -23,13 +23,13 @@ export const metadata: Metadata = {
         url: "/og.png",
         width: 1731,
         height: 909,
-        alt: "Kelo Care — Thread of Care",
+        alt: "Kelo Care: Thread of Care",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Kelo Care — Care that everyone can see",
+    title: "Kelo Care: Care that everyone can see",
     description:
       "Visit timers, care notes, and scheduling for home care teams.",
     images: ["/og.png"],

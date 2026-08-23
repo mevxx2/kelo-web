@@ -23,7 +23,7 @@ const NEXT_STEPS: Record<string, string[]> = {
   agency: [
     "Check your inbox for a confirmation link.",
     "We'll reach out to walk through team setup and imports.",
-    "Have your caregiver list handy — setup takes about an afternoon.",
+    "Have your caregiver list handy; setup takes about an afternoon.",
   ],
   family: [
     "Check your inbox for a confirmation link.",

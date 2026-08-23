@@ -3,6 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 
 import { cn } from "@/lib/utils";
@@ -10,19 +11,33 @@ import { CtaButton } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { EASE_OUT, useMotionSafe } from "@/lib/motion";
 
-const LINKS = [
+const HOME_LINKS = [
   { label: "Features", href: "/#features" },
   { label: "How it works", href: "/#how-it-works" },
   { label: "Pricing", href: "/#pricing" },
   { label: "FAQ", href: "/#faq" },
   { label: "Contact", href: "/#contact" },
+  { label: "For Agencies", href: "/for-agencies" },
+];
+
+const AGENCY_LINKS = [
+  { label: "Why Kelo", href: "/for-agencies#why-kelo" },
+  { label: "Rollout", href: "/for-agencies#rollout" },
+  { label: "Dashboard", href: "/for-agencies#dashboard" },
+  { label: "Pricing", href: "/for-agencies#pricing" },
+  { label: "FAQ", href: "/for-agencies#faq" },
 ];
 
 export function Nav() {
+  const pathname = usePathname();
   const safe = useMotionSafe();
   const [solid, setSolid] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [activeId, setActiveId] = useState<string | null>(null);
+  const isAgency = pathname.startsWith("/for-agencies");
+  const links = isAgency ? AGENCY_LINKS : HOME_LINKS;
+  const ctaHref = isAgency ? "/for-agencies/contact" : "/get-started";
+  const ctaLabel = isAgency ? "Bring Kelo to your team" : "Get started";
 
   // The pill stays translucent over the hero and turns opaque once the hero
   // has scrolled past it. Watching the hero element directly beats a magic
@@ -48,7 +63,7 @@ export function Nav() {
   // Scroll-spy: tracks which section is currently in view so the nav pill
   // can slide to sit behind the matching link as you scroll.
   useEffect(() => {
-    const ids = LINKS.map((link) => link.href.replace("/#", ""));
+    const ids = links.map((link) => link.href.split("#")[1]).filter((id): id is string => Boolean(id));
     const elements = ids
       .map((id) => document.getElementById(id))
       .filter((el): el is HTMLElement => el !== null);
@@ -68,12 +83,12 @@ export function Nav() {
 
     elements.forEach((el) => observer.observe(el));
     return () => observer.disconnect();
-  }, []);
+  }, [isAgency, links]);
 
   // Close the mobile sheet on resize to desktop, so state can't get stranded.
   useEffect(() => {
     if (!menuOpen) return;
-    const onResize = () => window.innerWidth >= 768 && setMenuOpen(false);
+    const onResize = () => window.innerWidth >= 1024 && setMenuOpen(false);
     window.addEventListener("resize", onResize);
     return () => window.removeEventListener("resize", onResize);
   }, [menuOpen]);
@@ -85,7 +100,7 @@ export function Nav() {
       transition={{ duration: safe ? 0.55 : 0.2, ease: EASE_OUT, delay: 0.05 }}
       className="fixed inset-x-0 top-0 z-50 flex justify-center px-4 pt-3 sm:pt-4"
     >
-      <div className="relative w-full max-w-5xl">
+      <div className="relative w-full max-w-6xl">
         <nav
           className={cn(
             "flex items-center justify-between gap-4 rounded-full px-3.5 py-2.5 transition-[background-color,box-shadow,backdrop-filter] duration-500 sm:px-5 sm:py-3",
@@ -103,9 +118,9 @@ export function Nav() {
             <LogoMark />
           </Link>
 
-          <ul className="hidden items-center gap-1.5 md:flex">
-            {LINKS.map((link) => {
-              const id = link.href.replace("/#", "");
+          <ul className="hidden items-center gap-1 lg:flex">
+            {links.map((link) => {
+              const id = link.href.split("#")[1] ?? null;
               const isActive = activeId === id;
 
               return (
@@ -113,7 +128,7 @@ export function Nav() {
                   <Link
                     href={link.href}
                     className={cn(
-                      "nav-underline relative z-10 block whitespace-nowrap px-4 py-2 text-sm font-medium text-white/65",
+                      "nav-underline relative z-10 block whitespace-nowrap px-3 py-2 text-sm font-medium text-white/65 xl:px-4",
                       isActive && "text-white",
                     )}
                   >
@@ -126,9 +141,9 @@ export function Nav() {
 
           <div className="flex items-center gap-3">
             <ThemeToggle />
-            <div className="hidden md:block">
-              <CtaButton href="/get-started" size="md">
-                Get started
+            <div className="hidden lg:block">
+              <CtaButton href={ctaHref} size="md">
+                {ctaLabel}
               </CtaButton>
             </div>
 
@@ -138,7 +153,7 @@ export function Nav() {
               aria-expanded={menuOpen}
               aria-controls="mobile-menu"
               aria-label={menuOpen ? "Close menu" : "Open menu"}
-              className="flex h-10 w-10 items-center justify-center rounded-full text-white/70 transition-colors hover:bg-white/10 md:hidden"
+              className="flex h-10 w-10 items-center justify-center rounded-full text-white/70 transition-colors hover:bg-white/10 lg:hidden"
             >
               <MenuIcon open={menuOpen} />
             </button>
@@ -153,10 +168,10 @@ export function Nav() {
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={safe ? { opacity: 0, y: -8, scale: 0.98 } : { opacity: 0 }}
               transition={{ duration: safe ? 0.24 : 0, ease: EASE_OUT }}
-              className="absolute inset-x-0 top-full z-40 mt-2 overflow-hidden rounded-3xl border border-white/10 bg-ink-900/95 shadow-lift backdrop-blur-xl md:hidden"
+              className="absolute inset-x-0 top-full z-40 mt-2 overflow-hidden rounded-3xl border border-white/10 bg-ink-900/95 shadow-lift backdrop-blur-xl lg:hidden"
             >
               <ul className="space-y-1 p-3">
-                {LINKS.map((link) => (
+                {links.map((link) => (
                   <li key={link.href}>
                     <Link
                       href={link.href}
@@ -168,8 +183,8 @@ export function Nav() {
                   </li>
                 ))}
                 <li className="pt-1">
-                  <CtaButton href="/get-started" size="lg" magnetic={0} fullWidth>
-                    Get started
+                  <CtaButton href={ctaHref} size="lg" magnetic={0} fullWidth>
+                    {ctaLabel}
                   </CtaButton>
                 </li>
               </ul>
@@ -192,7 +207,7 @@ function LogoMark() {
       width={332}
       height={277}
       priority
-      className="h-9 w-auto flex-shrink-0 transition-transform duration-300 group-hover:-rotate-6 motion-reduce:transition-none motion-reduce:group-hover:rotate-0"
+      className="relative top-2 h-9 w-auto flex-shrink-0 self-center transition-transform duration-300 group-hover:-rotate-6 motion-reduce:transition-none motion-reduce:group-hover:rotate-0"
     />
   );
 }

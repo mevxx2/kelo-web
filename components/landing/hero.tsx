@@ -120,7 +120,7 @@ export function Hero() {
             className="mx-auto mt-6 max-w-xl text-pretty text-center text-lg leading-relaxed text-white/50"
           >
             Kelo Care keeps caregivers, agencies, and families working from the
-            same picture — visit timers, care notes, and schedules in one place.
+            same picture: visit timers, care notes, and schedules in one place.
           </motion.p>
         </motion.div>
 

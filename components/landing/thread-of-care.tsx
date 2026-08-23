@@ -1,7 +1,6 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
 import { useRef, useState } from "react";
 import {
   AnimatePresence,
@@ -12,6 +11,7 @@ import {
 } from "framer-motion";
 
 import { CareCanvas } from "@/components/landing/care-thread";
+import { SiteFooter } from "@/components/site-footer";
 import { LivingCard } from "@/components/ui/living-card";
 import { ArrowRight, CtaButton } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -77,7 +77,7 @@ const QUOTES = [
 ];
 
 const FAQS = [
-  ["Do caregivers need to be tech-savvy to use it?", "No. The whole visit flow is two taps — start on arrival, end on the way out. Most caregivers are running their first visit within a minute of installing the app."],
+  ["Do caregivers need to be tech-savvy to use it?", "No. The whole visit flow is two taps: start on arrival, end on the way out. Most caregivers are running their first visit within a minute of installing the app."],
   ["What happens if there's no signal at a client's home?", "Visits log offline and sync as soon as the phone reconnects. Timers keep running locally, so a basement with no bars never costs someone their hours."],
   ["How much can families see?", "Exactly what you decide. Roles control access, so a family member can see the day's summary and upcoming visits without seeing pay rates, other clients, or internal agency notes."],
   ["Is $40 per caregiver the whole cost?", "Yes. Client seats, family accounts, and the agency dashboard are included. There are no per-visit fees, setup fees, or charges for exports."],
@@ -101,7 +101,7 @@ export function ThreadOfCare() {
         <Pricing />
         <Faq />
         <Closing />
-        <Footer />
+        <SiteFooter />
       </CareCanvas>
     </MotionConfig>
   );
@@ -142,7 +142,7 @@ function Hero() {
             Care that everyone <span className="thread-text">can see.</span>
           </h1>
           <p className="mx-auto mt-7 max-w-2xl text-pretty text-lg leading-relaxed text-white/65 sm:text-xl">
-            Kelo Care keeps caregivers, agencies, and families working from the same picture — visit timers, care notes, and schedules in one place.
+            Kelo Care keeps caregivers, agencies, and families working from the same picture, visit timers, care notes, and schedules in one place.
           </p>
         </motion.div>
 
@@ -314,25 +314,6 @@ function Closing() {
       </motion.div>
     </section>
   );
-}
-
-function Footer() {
-  return (
-    <footer id="contact" className="relative px-5 pb-10 pt-24">
-      <div className="mx-auto max-w-6xl border-t border-white/10 pt-12">
-        <div className="grid gap-10 sm:grid-cols-[1.4fr_1fr_1fr]">
-          <div><p className="text-xl font-semibold text-white">Kelo Care</p><p className="mt-3 max-w-xs text-sm leading-relaxed text-white/45">Visit tracking, care notes, and scheduling for the people who show up.</p></div>
-          <FooterColumn title="Product" links={[["Features","/#features"],["How it works","/#how-it-works"],["Pricing","/#pricing"],["FAQ","/#faq"]]} />
-          <FooterColumn title="Company" links={[["Contact","mailto:hello@kelocare.com"],["Privacy","/#"],["Terms","/#"],["Accessibility","/#"]]} />
-        </div>
-        <div className="mt-14 flex flex-col gap-3 border-t border-white/10 pt-7 text-sm text-white/35 sm:flex-row sm:justify-between"><p>© {new Date().getFullYear()} Kelo Care. All rights reserved.</p><p>Made for caregivers.</p></div>
-      </div>
-    </footer>
-  );
-}
-
-function FooterColumn({ title, links }: { title: string; links: string[][] }) {
-  return <div><h3 className="text-sm font-semibold text-white">{title}</h3><ul className="mt-4 space-y-3">{links.map(([label, href]) => <li key={label}><Link href={href} className="nav-underline text-sm text-white/45">{label}</Link></li>)}</ul></div>;
 }
 
 function Eyebrow({ children }: { children: React.ReactNode }) {
