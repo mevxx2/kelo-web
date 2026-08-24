@@ -20,7 +20,7 @@ const COLUMNS = [
     links: [
       { label: "About", href: "/#" },
       { label: "Careers", href: "/#" },
-      { label: "Contact", href: "mailto:hello@kelocare.com" },
+      { label: "Contact", href: "mailto:hello@kelo-care.com" },
     ],
   },
   {
@@ -80,7 +80,7 @@ export function Footer() {
               <Social label="Kelo Care on LinkedIn" href="https://linkedin.com">
                 <path d="M5 3.5a1.9 1.9 0 1 0 0 3.8 1.9 1.9 0 0 0 0-3.8ZM3.4 9h3.3v11.5H3.4V9Zm5.6 0h3.1v1.6h.05c.44-.8 1.5-1.65 3.1-1.65 3.3 0 3.9 2.1 3.9 4.9v6.65h-3.25v-5.9c0-1.4-.03-3.2-2-3.2-2 0-2.3 1.5-2.3 3.1v6h-3.25V9Z" />
               </Social>
-              <Social label="Email Kelo Care" href="mailto:hello@kelocare.com">
+              <Social label="Email Kelo Care" href="mailto:hello@kelo-care.com">
                 <path d="M3.5 6.5A2.5 2.5 0 0 1 6 4h12a2.5 2.5 0 0 1 2.5 2.5v11A2.5 2.5 0 0 1 18 20H6a2.5 2.5 0 0 1-2.5-2.5v-11Zm2.2-.3L12 11.4l6.3-5.2H5.7Z" />
               </Social>
             </div>
