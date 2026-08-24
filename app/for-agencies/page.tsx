@@ -1,16 +1,16 @@
 import type { Metadata } from "next";
 
-import { AgencyPage } from "@/components/agency/agency-page";
+import { AgencyAccess } from "@/components/agency/agency-access";
 
-const description = "Give your home care team one clear view of visits, notes, schedules, and assignments, with no direct cost to your agency.";
+const description = "Sign in or create a Kelo Care agency workspace for your home care team.";
 
 export const metadata: Metadata = {
-  title: "For Agencies",
+  title: "Agency Portal",
   description,
-  openGraph: { title: "Kelo Care for Agencies", description, images: ["/og.png"] },
-  twitter: { title: "Kelo Care for Agencies", description, images: ["/og.png"] },
+  openGraph: { title: "Kelo Care Agency Portal", description, images: ["/og.png"] },
+  twitter: { title: "Kelo Care Agency Portal", description, images: ["/og.png"] },
 };
 
 export default function ForAgenciesPage() {
-  return <AgencyPage />;
+  return <AgencyAccess />;
 }

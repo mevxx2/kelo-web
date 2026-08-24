@@ -29,6 +29,10 @@ export function SiteHeader() {
     return <FunnelHeader backHref="/for-agencies" backLabel="Back to agencies" />;
   }
 
+  if (pathname.startsWith("/for-agencies")) {
+    return <FunnelHeader backHref="/" backLabel="Back to Kelo Care" />;
+  }
+
   return <Nav />;
 }
 
@@ -60,7 +64,7 @@ function FunnelHeader({ backHref, backLabel }: { backHref: string; backLabel: st
         <div className="flex items-center gap-3">
           <ThemeToggle />
           <Link
-            href="/"
+            href={backHref}
             className="nav-underline group inline-flex items-center gap-1.5 text-sm font-medium text-white/65"
           >
             <svg viewBox="0 0 20 20" fill="none" className="h-4 w-4 transition-transform duration-300 group-hover:-translate-x-0.5 motion-reduce:transition-none motion-reduce:group-hover:translate-x-0" aria-hidden="true">
