@@ -5,6 +5,7 @@ import { useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
 
 import { CtaButton } from "@/components/ui/button";
+import { StoreButtons } from "@/components/store-buttons";
 import { cn } from "@/lib/utils";
 import {
   EASE_OUT,
@@ -135,12 +136,9 @@ function Confirmation() {
 
       <motion.div variants={item} className="mt-10">
         <p className="text-xs font-semibold uppercase tracking-widest text-white/40">
-          Coming soon
+          Install Kelo Care
         </p>
-        <div className="mt-4 flex justify-center gap-3">
-          <StoreBadge store="App Store" />
-          <StoreBadge store="Google Play" />
-        </div>
+        <StoreButtons className="mt-4" />
       </motion.div>
 
       <motion.div variants={item} className="mt-10 flex justify-center">
@@ -181,17 +179,5 @@ function Burst({ safe }: { safe: boolean }) {
         );
       })}
     </>
-  );
-}
-
-/** Placeholder badges. Swap for the official artwork once the apps are live. */
-function StoreBadge({ store }: { store: string }) {
-  return (
-    <span className="inline-flex cursor-default items-center gap-2 rounded-xl border border-white/10 bg-white/[0.04] px-4 py-2.5 text-sm font-medium text-white/40">
-      <svg viewBox="0 0 24 24" className="h-4 w-4" fill="currentColor" aria-hidden="true">
-        <path d="M12 2 4 6.5v11L12 22l8-4.5v-11L12 2Zm0 2.3 5.8 3.3L12 10.9 6.2 7.6 12 4.3Z" />
-      </svg>
-      {store}
-    </span>
   );
 }

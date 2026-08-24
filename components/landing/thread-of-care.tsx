@@ -12,6 +12,7 @@ import {
 
 import { CareCanvas } from "@/components/landing/care-thread";
 import { SiteFooter } from "@/components/site-footer";
+import { StoreButtons } from "@/components/store-buttons";
 import { LivingCard } from "@/components/ui/living-card";
 import { ArrowRight, CtaButton } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -99,6 +100,7 @@ export function ThreadOfCare() {
         <HowItWorks />
         <Testimonials />
         <Pricing />
+        <Download />
         <Faq />
         <Closing />
         <SiteFooter />
@@ -137,7 +139,7 @@ function Hero() {
           animate={safe ? { clipPath: "inset(0 0% 0 0)", opacity: 1 } : { opacity: 1 }}
           transition={{ duration: safe ? 1.15 : .2, delay: safe ? 1.55 : 0, ease: EASE_OUT }}
         >
-          <p className="text-xs font-semibold uppercase tracking-[.26em] text-white/55">Now in early access</p>
+          <p className="text-xs font-semibold uppercase tracking-[.26em] text-white/55">Care, clearly connected</p>
           <h1 className="mx-auto mt-5 max-w-5xl text-balance text-5xl font-medium leading-[.98] tracking-[-.055em] text-white sm:text-7xl lg:text-[6.5rem]">
             Care that everyone <span className="thread-text">can see.</span>
           </h1>
@@ -147,7 +149,7 @@ function Hero() {
         </motion.div>
 
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: safe ? 2.25 : 0, duration: .65 }} className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row">
-          <CtaButton href="/get-started" size="lg" className="heartbeat-button">Get started <ArrowRight /></CtaButton>
+          <CtaButton href="/#download" size="lg" className="heartbeat-button">Install Kelo <ArrowRight /></CtaButton>
           <CtaButton href="/#how-it-works" variant="secondary" size="lg" magnetic={.15}>See how it works</CtaButton>
         </motion.div>
         <p className="mt-5 text-sm text-white/45">$40 per caregiver, per year. No per-visit fees.</p>
@@ -272,10 +274,24 @@ function Pricing() {
           <p className="text-sm font-semibold uppercase tracking-[.22em] text-kelo-200">Everything included</p>
           <div className="mt-5 flex items-end gap-3"><span className="text-7xl font-medium tracking-[-.06em] text-white">$40</span><span className="pb-2 text-white/50">per caregiver<br/>per year</span></div>
           <ul className="mt-9 grid gap-3 sm:grid-cols-2">{included.map((item) => <li key={item} className="flex gap-2 text-sm text-white/68"><span className="text-kelo-200">✓</span>{item}</li>)}</ul>
-          <div className="mt-10"><CtaButton href="/get-started" size="lg" fullWidth className="heartbeat-button">Get started <ArrowRight /></CtaButton></div>
-          <p className="mt-4 text-center text-xs text-white/40">No setup fees. No per-visit fees. No fake tiers.</p>
+          <div className="mt-10"><CtaButton href="/#download" size="lg" fullWidth className="heartbeat-button">Install Kelo <ArrowRight /></CtaButton></div>
+          <p className="mt-4 text-center text-xs text-white/40">No setup fees. No per-visit fees. Purchase securely inside the app.</p>
         </LivingCard>
       </div>
+    </section>
+  );
+}
+
+function Download() {
+  return (
+    <section id="download" className="relative px-5 py-28 text-center sm:py-36">
+      <motion.div initial={{ opacity: 0, y: 22 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: .3 }} transition={{ duration: .6, ease: EASE_OUT }} className="mx-auto max-w-3xl">
+        <Eyebrow>Get Kelo Care</Eyebrow>
+        <h2 className="mt-4 text-balance text-4xl font-medium tracking-[-.04em] text-white sm:text-6xl">Install the app. Keep care moving.</h2>
+        <p className="mx-auto mt-5 max-w-xl text-lg leading-relaxed text-white/58">Kelo Care is available for iPhone and Android. Download the app, then purchase your $40 yearly plan securely inside Kelo.</p>
+        <StoreButtons className="mt-9" />
+        <p className="mt-5 text-xs text-white/38">Store links will be activated when the listings are live.</p>
+      </motion.div>
     </section>
   );
 }
@@ -310,7 +326,7 @@ function Closing() {
         <p className="text-sm font-semibold uppercase tracking-[.3em] text-kelo-200">One team. One picture.</p>
         <h2 className="mt-5 text-balance text-5xl font-medium tracking-[-.05em] text-white sm:text-7xl">Keep every moment of care connected.</h2>
         <p className="mx-auto mt-7 max-w-xl text-lg leading-relaxed text-white/55">Visit tracking, care notes, and scheduling for the people who show up.</p>
-        <div className="mt-10 flex justify-center"><CtaButton href="/get-started" size="lg" className="heartbeat-button heartbeat-slow">Get started <ArrowRight /></CtaButton></div>
+        <div className="mt-10 flex justify-center"><CtaButton href="/#download" size="lg" className="heartbeat-button heartbeat-slow">Install Kelo <ArrowRight /></CtaButton></div>
       </motion.div>
     </section>
   );

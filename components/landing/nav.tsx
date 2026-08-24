@@ -36,8 +36,8 @@ export function Nav() {
   const [activeId, setActiveId] = useState<string | null>(null);
   const isAgency = pathname.startsWith("/for-agencies");
   const links = isAgency ? AGENCY_LINKS : HOME_LINKS;
-  const ctaHref = isAgency ? "/for-agencies/contact" : "/get-started";
-  const ctaLabel = isAgency ? "Bring Kelo to your team" : "Get started";
+  const ctaHref = isAgency ? "/for-agencies" : "/#download";
+  const ctaLabel = isAgency ? "Agency portal" : "Install Kelo";
 
   // The pill stays translucent over the hero and turns opaque once the hero
   // has scrolled past it. Watching the hero element directly beats a magic
