@@ -6,21 +6,21 @@
  * Kelo brand palette — single source of truth.
  * Channels are space-separated RGB so Tailwind can apply alpha modifiers and
  * SpaceBackground can read --kelo-brand directly via getComputedStyle.
- * Anchored on the actual logo's ink (sampled ~rgb(49,1,202) from the logo
- * asset) rather than a generic SaaS blue, so the accent color and the logo
- * mark read as the same brand rather than two different blues.
+ * The logo's raw ink samples at ~rgb(49,0,208), hue 254° — past true blue
+ * (240°) into violet. This scale is a true blue (hue 221°) instead, so
+ * buttons, glows, highlights, and logo read as the same Kelo blue.
  */
 :root {
-  --kelo-50: 238 233 255;
-  --kelo-100: 220 208 255;
-  --kelo-200: 190 168 255;
-  --kelo-300: 152 116 255;
-  --kelo-400: 108 62 245;
-  --kelo-500: 75 25 222;
-  --kelo-600: 50 0 202;
-  --kelo-700: 40 0 168;
-  --kelo-800: 32 0 136;
-  --kelo-900: 25 0 108;
+  --kelo-50: 239 246 255;
+  --kelo-100: 219 234 254;
+  --kelo-200: 191 219 254;
+  --kelo-300: 147 197 253;
+  --kelo-400: 96 165 250;
+  --kelo-500: 59 130 246;
+  --kelo-600: 37 99 235;
+  --kelo-700: 29 78 216;
+  --kelo-800: 30 64 175;
+  --kelo-900: 30 58 138;
 
   --kelo-brand: var(--kelo-600);
 
@@ -54,6 +54,10 @@
     scroll-behavior: smooth;
     position: relative;
     -webkit-text-size-adjust: 100%;
+    /* Kills the default gray/blue tap-highlight rectangle mobile Safari and
+       Chrome flash over any tappable element — on a rounded-full button it
+       reads as a box snapping over the pill on every tap. */
+    -webkit-tap-highlight-color: transparent;
   }
 
   /* Anchor links land below the sticky nav instead of underneath it. */
@@ -70,10 +74,17 @@
     color: white;
   }
 
+  /*
+   * No `border-radius` here on purpose — an earlier version hardcoded 4px,
+   * which forced every focused element's OWN corners to 4px (not just the
+   * outline's), so a rounded-full button visibly squared off into a box the
+   * instant it was focused or tapped. Modern browsers already draw the
+   * outline following the element's actual border-radius, so each button's
+   * own `rounded-*` class is enough.
+   */
   :focus-visible {
     outline: 2px solid rgb(var(--kelo-400));
     outline-offset: 2px;
-    border-radius: 4px;
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -100,15 +111,15 @@
 
 .care-ambient {
   background:
-    radial-gradient(circle at 50% 0%, rgba(50, 0, 202, 0.06), transparent 22%),
+    radial-gradient(circle at 50% 0%, rgba(37, 99, 235, 0.08), transparent 22%),
     radial-gradient(circle at 12% 46%, rgba(66, 96, 210, 0.14), transparent 28%),
-    radial-gradient(circle at 86% 70%, rgba(50, 0, 202, 0.17), transparent 28%);
+    radial-gradient(circle at 86% 70%, rgba(30, 64, 175, 0.17), transparent 28%);
 }
 
 .care-canvas[data-care-variant="agency"] .care-ambient {
   background:
     radial-gradient(circle at 52% 0%, rgba(74, 118, 255, 0.18), transparent 28%),
-    radial-gradient(circle at 10% 38%, rgba(86, 78, 224, 0.13), transparent 30%),
+    radial-gradient(circle at 10% 38%, rgba(59, 130, 246, 0.13), transparent 30%),
     radial-gradient(circle at 88% 68%, rgba(41, 73, 176, 0.13), transparent 32%);
 }
 
@@ -141,10 +152,14 @@ html:not([data-theme="light"]) #hero .thread-text {
 }
 
 .thread-text {
-  background: linear-gradient(105deg, #fff3e4 0%, #bbb2ff 42%, #7f73ff 100%);
+  background: linear-gradient(105deg, #eff6ff 0%, #93c5fd 42%, #2563eb 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
+}
+
+.kelo-logo {
+  filter: hue-rotate(-33deg) saturate(1.12);
 }
 
 .heartbeat-button {
@@ -276,7 +291,7 @@ html[data-theme="light"] .theme-surface [class*="text-kelo-3"] {
 
 html[data-theme="light"] .care-canvas [class*="border-white/"],
 html[data-theme="light"] .theme-surface [class*="border-white/"] {
-  border-color: rgba(50, 0, 202, 0.13) !important;
+  border-color: rgba(37, 99, 235, 0.13) !important;
 }
 
 html[data-theme="light"] .care-canvas [class*="bg-white/"],
@@ -285,13 +300,13 @@ html[data-theme="light"] .theme-surface [class*="bg-white/"] {
 }
 
 html[data-theme="light"] .living-card {
-  border-color: rgba(50, 0, 202, 0.15) !important;
+  border-color: rgba(37, 99, 235, 0.15) !important;
   background: rgba(255, 255, 255, 0.56) !important;
   box-shadow: 0 24px 70px -38px rgba(42, 28, 102, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.9) !important;
 }
 
 html[data-theme="light"] .living-card:hover {
-  border-color: rgba(50, 0, 202, 0.28) !important;
+  border-color: rgba(37, 99, 235, 0.28) !important;
   background: rgba(255, 255, 255, 0.72) !important;
 }
 
@@ -299,7 +314,7 @@ html[data-theme="light"] .living-card:hover {
    card. Give it a bright, layered white canvas with only a whisper of blue,
    instead of carrying its dark shell into light mode. */
 html[data-theme="light"] .care-canvas[data-care-variant="agency"] .bg-\[\#090d24\]\/65 {
-  border-color: rgba(50, 0, 202, 0.14) !important;
+  border-color: rgba(37, 99, 235, 0.14) !important;
   background:
     radial-gradient(circle at 100% 0%, rgba(120, 146, 255, 0.12), transparent 34%),
     linear-gradient(145deg, rgba(255, 255, 255, 0.98), rgba(247, 249, 255, 0.94)) !important;
@@ -308,7 +323,7 @@ html[data-theme="light"] .care-canvas[data-care-variant="agency"] .bg-\[\#090d24
 
 html[data-theme="light"] .care-canvas[data-care-variant="agency"] aside {
   background: linear-gradient(180deg, rgba(243, 246, 255, 0.92), rgba(252, 252, 255, 0.82)) !important;
-  border-color: rgba(50, 0, 202, 0.1) !important;
+  border-color: rgba(37, 99, 235, 0.1) !important;
 }
 
 html[data-theme="light"] .care-canvas[data-care-variant="agency"] thead {
@@ -317,15 +332,15 @@ html[data-theme="light"] .care-canvas[data-care-variant="agency"] thead {
 
 html[data-theme="light"] .care-canvas[data-care-variant="agency"] input {
   background: rgba(255, 255, 255, 0.88) !important;
-  border-color: rgba(50, 0, 202, 0.16) !important;
+  border-color: rgba(37, 99, 235, 0.16) !important;
 }
 
 html[data-theme="light"] .thread-text {
-  background-image: linear-gradient(105deg, #703a12 0%, #4434a9 45%, #3200ca 100%);
+  background-image: linear-gradient(105deg, #1e3a8a 0%, #2563eb 45%, #1d4ed8 100%);
 }
 
 html[data-theme="light"] .thread-pulse {
-  filter: drop-shadow(0 0 3px rgba(50, 0, 202, 0.28));
+  filter: drop-shadow(0 0 3px rgba(37, 99, 235, 0.28));
 }
 
 html[data-theme="light"] .heartbeat-button,
@@ -336,7 +351,7 @@ html[data-theme="light"] .theme-surface .heartbeat-button {
 
 html[data-theme="light"] header nav,
 html[data-theme="light"] header > div > div {
-  border-color: rgba(50, 0, 202, 0.13) !important;
+  border-color: rgba(37, 99, 235, 0.13) !important;
   background: rgba(250, 249, 255, 0.78) !important;
   box-shadow: 0 16px 45px -28px rgba(38, 21, 105, 0.5);
 }
@@ -355,9 +370,9 @@ html[data-theme="light"] .theme-surface {
 }
 
 html[data-theme="light"] .theme-toggle-track {
-  border-color: rgba(50, 0, 202, 0.15);
-  background: rgba(50, 0, 202, 0.08);
-  box-shadow: inset 0 1px 5px rgba(50, 0, 202, 0.08);
+  border-color: rgba(37, 99, 235, 0.15);
+  background: rgba(37, 99, 235, 0.08);
+  box-shadow: inset 0 1px 5px rgba(37, 99, 235, 0.08);
 }
 
 html[data-theme="light"] .theme-toggle-thumb {

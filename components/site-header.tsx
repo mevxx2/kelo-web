@@ -57,7 +57,7 @@ function FunnelHeader({ backHref, backLabel }: { backHref: string; backLabel: st
             alt="Kelo Care"
             width={332}
             height={277}
-            className="h-9 w-auto flex-shrink-0 transition-transform duration-300 group-hover:-rotate-6 motion-reduce:transition-none motion-reduce:group-hover:rotate-0"
+            className="kelo-logo h-9 w-auto flex-shrink-0 transition-transform duration-300 group-hover:-rotate-6 motion-reduce:transition-none motion-reduce:group-hover:rotate-0"
           />
         </Link>
 

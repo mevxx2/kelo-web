@@ -207,7 +207,7 @@ function LogoMark() {
       width={332}
       height={277}
       priority
-      className="relative top-2 h-9 w-auto flex-shrink-0 self-center transition-transform duration-300 group-hover:-rotate-6 motion-reduce:transition-none motion-reduce:group-hover:rotate-0"
+      className="kelo-logo relative top-2 h-9 w-auto flex-shrink-0 self-center transition-transform duration-300 group-hover:-rotate-6 motion-reduce:transition-none motion-reduce:group-hover:rotate-0"
     />
   );
 }

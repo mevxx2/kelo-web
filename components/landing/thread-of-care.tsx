@@ -97,7 +97,7 @@ function Hero() {
     <section id="hero" className="relative min-h-[1050px] overflow-hidden px-5 pb-24 pt-32 sm:pt-40">
       <div className="mx-auto max-w-6xl text-center">
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: safe ? 0.5 : 0.15 }} className="flex justify-center">
-          <Image src="/images/logo.png" alt="Kelo Care" width={332} height={277} priority className="h-28 w-auto" />
+          <Image src="/images/logo.png" alt="Kelo Care" width={332} height={277} priority className="kelo-logo h-28 w-auto" />
         </motion.div>
 
         <motion.svg viewBox="0 0 900 180" className="mx-auto mt-5 h-32 w-full max-w-4xl overflow-visible" fill="none" aria-hidden="true">
@@ -204,7 +204,7 @@ function HowItWorks() {
           <ol className="relative space-y-8 before:absolute before:bottom-8 before:left-[1.4rem] before:top-8 before:w-px before:bg-white/15">
             {STEPS.map((step, i) => (
               <li key={step.title} className="relative flex gap-6">
-                <motion.span initial={false} animate={{ scale: active === i ? 1.18 : 1, backgroundColor: active >= i ? "#6f5cff" : "rgba(255,255,255,.1)" }} className="relative z-10 flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-white/20 text-sm font-bold text-white shadow-[0_0_28px_rgba(91,71,255,.35)]">0{i + 1}</motion.span>
+                <motion.span initial={false} animate={{ scale: active === i ? 1.18 : 1, backgroundColor: active >= i ? "#2563eb" : "rgba(255,255,255,.1)" }} className="relative z-10 flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-white/20 text-sm font-bold text-white shadow-[0_0_28px_rgba(37,99,235,.35)]">0{i + 1}</motion.span>
                 <motion.div initial={false} animate={{ opacity: active === i ? 1 : .45, x: active === i ? 8 : 0 }} className="pb-8">
                   <h3 className="text-xl font-semibold text-white">{step.title}</h3>
                   <p className="mt-2 max-w-lg leading-relaxed text-white/60">{step.body}</p>
@@ -231,7 +231,7 @@ function Pricing() {
   const included = ["Unlimited visits and care notes", "Scheduling and coverage", "Family access", "Agency dashboard", "CSV exports and API access", "iOS, Android, and web"];
   return (
     <section id="pricing" className="relative px-5 py-36">
-      <svg aria-hidden="true" viewBox="0 0 800 380" className="pointer-events-none absolute left-1/2 top-1/2 h-[520px] w-[900px] -translate-x-1/2 -translate-y-1/2 opacity-45" fill="none"><path d="M40 190C150 20 650 20 760 190C650 360 150 360 40 190Z" stroke="#7f73ff" strokeWidth="2" className="thread-pulse" /></svg>
+      <svg aria-hidden="true" viewBox="0 0 800 380" className="pointer-events-none absolute left-1/2 top-1/2 h-[520px] w-[900px] -translate-x-1/2 -translate-y-1/2 opacity-45" fill="none"><path d="M40 190C150 20 650 20 760 190C650 360 150 360 40 190Z" stroke="#2563eb" strokeWidth="2" className="thread-pulse" /></svg>
       <div className="relative mx-auto max-w-2xl text-center">
         <Eyebrow>Simple pricing</Eyebrow>
         <LivingCard className="mt-12 p-8 text-left sm:p-12" breathe={1.022}>

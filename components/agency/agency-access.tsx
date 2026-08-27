@@ -72,7 +72,7 @@ export function AgencyAccess() {
             transition={{ duration: safe ? 0.6 : 0.15, ease: EASE_OUT }}
             className="max-w-xl"
           >
-            <Image src="/images/logo.png" alt="Kelo Care" width={332} height={277} priority className="h-20 w-auto" />
+            <Image src="/images/logo.png" alt="Kelo Care" width={332} height={277} priority className="kelo-logo h-20 w-auto" />
             <p className="mt-8 text-xs font-semibold uppercase tracking-[.28em] text-kelo-200">Agency portal</p>
             <h1 className="mt-4 text-balance text-4xl font-medium tracking-[-.05em] text-white sm:text-6xl">The care team, <span className="thread-text">in one clear view.</span></h1>
             <p className="mt-6 max-w-lg text-lg leading-relaxed text-white/60">Kelo&apos;s agency workspace brings your roster, client assignments, visits, and care notes together—built for the people coordinating the whole picture.</p>
