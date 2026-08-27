@@ -59,24 +59,6 @@ const STEPS = [
   },
 ];
 
-const QUOTES = [
-  {
-    quote: "Placeholder quote about how much time the visit timer saves at the end of a week.",
-    name: "Placeholder Name",
-    meta: "Caregiver · Placeholder Home Care",
-  },
-  {
-    quote: "Placeholder quote from an agency owner about finally seeing coverage without phoning around.",
-    name: "Placeholder Name",
-    meta: "Agency owner · Placeholder Care Group",
-  },
-  {
-    quote: "Placeholder quote from a family member about knowing how the morning went without having to ask.",
-    name: "Placeholder Name",
-    meta: "Family member · Toronto, ON",
-  },
-];
-
 const FAQS = [
   ["Do caregivers need to be tech-savvy to use it?", "No. The whole visit flow is two taps: start on arrival, end on the way out. Most caregivers are running their first visit within a minute of installing the app."],
   ["What happens if there's no signal at a client's home?", "Visits log offline and sync as soon as the phone reconnects. Timers keep running locally, so a basement with no bars never costs someone their hours."],
@@ -98,7 +80,6 @@ export function ThreadOfCare() {
         <Hero />
         <Features />
         <HowItWorks />
-        <Testimonials />
         <Pricing />
         <Download />
         <Faq />
@@ -241,23 +222,6 @@ function HowItWorks() {
             </LivingCard>
           </div>
         </div>
-      </div>
-    </section>
-  );
-}
-
-function Testimonials() {
-  return (
-    <section className="relative overflow-hidden py-32">
-      <div className="mx-auto max-w-6xl px-5"><Eyebrow>In their words</Eyebrow><h2 className="mt-4 max-w-3xl text-4xl font-medium tracking-[-.04em] text-white sm:text-6xl">Built with the people doing the work.</h2></div>
-      <div className="marquee-group mt-16 flex w-max gap-6 px-3">
-        {[...QUOTES, ...QUOTES].map((item, i) => (
-          <LivingCard key={`${item.meta}-${i}`} className="w-[340px] p-7 sm:w-[420px]" breathe={1.008}>
-            <span className="text-5xl leading-none text-kelo-300/50">“</span>
-            <blockquote className="mt-3 min-h-24 text-lg leading-relaxed text-white/75">{item.quote}</blockquote>
-            <figcaption className="mt-7 border-t border-white/12 pt-5"><strong className="block text-white">{item.name}</strong><span className="mt-1 block text-sm text-white/45">{item.meta}</span></figcaption>
-          </LivingCard>
-        ))}
       </div>
     </section>
   );
