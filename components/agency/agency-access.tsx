@@ -11,6 +11,7 @@ import { CareCanvas } from "@/components/landing/care-thread";
 import { LivingCard } from "@/components/ui/living-card";
 import { cn } from "@/lib/utils";
 import { EASE_OUT, useMotionSafe } from "@/lib/motion";
+import { supabase } from "@/lib/supabase/client";
 
 export function AgencyAccess() {
   const safe = useMotionSafe();
@@ -18,13 +19,46 @@ export function AgencyAccess() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const signIn = (event: React.FormEvent) => {
+  const signIn = async (event: React.FormEvent) => {
     event.preventDefault();
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim()) || !password) {
       setError("Enter your work email and password to continue.");
       return;
     }
+    setIsSubmitting(true);
+    const { data, error: signInError } = await supabase.auth.signInWithPassword({
+      email: email.trim(),
+      password,
+    });
+
+    if (signInError || !data.user) {
+      setError("We couldn't sign you in with those details. Please try again.");
+      setIsSubmitting(false);
+      return;
+    }
+
+    const { data: profile, error: profileError } = await supabase
+      .from("profiles")
+      .select("id, role, agency_id")
+      .eq("id", data.user.id)
+      .single();
+    const { data: agency } = profile?.agency_id
+      ? await supabase
+          .from("agencies")
+          .select("id, leader_id")
+          .eq("id", profile.agency_id)
+          .maybeSingle()
+      : { data: null };
+
+    if (profileError || profile?.role !== "team_leader" || agency?.leader_id !== data.user.id) {
+      await supabase.auth.signOut();
+      setError("This portal is only available to the team leader for an active Kelo agency.");
+      setIsSubmitting(false);
+      return;
+    }
+
     router.push("/for-agencies/dashboard");
   };
 
@@ -65,13 +99,11 @@ export function AgencyAccess() {
                 <Field id="agency-email" label="Work email" type="email" value={email} placeholder="you@agency.com" onChange={(value) => { setEmail(value); setError(""); }} />
                 <Field id="agency-password" label="Password" type="password" value={password} placeholder="Enter your password" onChange={(value) => { setPassword(value); setError(""); }} />
                 {error ? <p role="alert" className="text-sm text-red-300">{error}</p> : null}
-                <CtaButton type="submit" size="lg" fullWidth>Sign in <ArrowRight /></CtaButton>
+                <CtaButton type="submit" size="lg" fullWidth disabled={isSubmitting}>{isSubmitting ? "Signing in…" : <>Sign in <ArrowRight /></>}</CtaButton>
               </form>
-              <div className="my-7 flex items-center gap-3 text-xs text-white/35 before:h-px before:flex-1 before:bg-white/10 after:h-px after:flex-1 after:bg-white/10">or</div>
-              <CtaButton href="/for-agencies/signup" variant="secondary" size="lg" fullWidth>Create an agency workspace</CtaButton>
-              <p className="mt-5 text-center text-xs leading-relaxed text-white/38">This is a portal preview: account details are not stored or sent yet.</p>
+              <p className="mt-5 text-center text-xs leading-relaxed text-white/38">Use the same Kelo account you use in the app. Only verified agency team leaders can open this workspace.</p>
             </LivingCard>
-            <p className="mx-auto mt-5 max-w-md text-center text-sm text-white/45">New to Kelo? Create your workspace first, then invite your care team.</p>
+            <p className="mx-auto mt-5 max-w-md text-center text-sm text-white/45">Need agency access? Contact <a className="text-kelo-200 underline underline-offset-4" href="mailto:hello@kelo-care.com">hello@kelo-care.com</a>.</p>
           </motion.div>
         </div>
       </section>
