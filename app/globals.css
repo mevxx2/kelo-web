@@ -447,3 +447,8 @@ html[data-theme="light"] .theme-toggle-thumb {
     animation: none;
   }
 }
+
+.agency-select option {
+  background: #f8fbff;
+  color: #0f172a;
+}
