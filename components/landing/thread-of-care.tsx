@@ -201,7 +201,7 @@ function HowItWorks() {
         <Eyebrow>How it works</Eyebrow>
         <h2 className="mt-4 text-4xl font-medium tracking-[-.04em] text-white sm:text-6xl">Running in an afternoon.</h2>
         <div className="mt-20 grid gap-14 lg:grid-cols-[1fr_.9fr]">
-          <ol className="relative space-y-8 before:absolute before:bottom-8 before:left-[1.4rem] before:top-8 before:w-px before:bg-white/15">
+          <ol className="relative space-y-8 rounded-[2rem] border border-white/10 bg-white/[0.045] px-6 py-8 shadow-[0_20px_70px_rgba(15,23,42,.12)] before:absolute before:bottom-8 before:left-[2.875rem] before:top-8 before:w-px before:bg-white/15">
             {STEPS.map((step, i) => (
               <li key={step.title} className="relative flex gap-6">
                 <motion.span initial={false} animate={{ scale: active === i ? 1.18 : 1, backgroundColor: active >= i ? "#2563eb" : "rgba(255,255,255,.1)" }} className="relative z-10 flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-white/20 text-sm font-bold text-white shadow-[0_0_28px_rgba(37,99,235,.35)]">0{i + 1}</motion.span>
