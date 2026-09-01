@@ -80,7 +80,7 @@ export function AgencyAccess() {
               {[
                 ["Team visibility", "See schedules, live visit status, and care notes in one place."],
                 ["Clear assignments", "Keep caregivers, clients, and tasks connected across every shift."],
-                ["Caregiver-paid access", "$0 billed to your agency. Caregivers subscribe individually for $40/year."],
+                ["Caregiver-paid access", "$0 billed to your agency. Caregivers choose $59/year or $7/month, with 14 days free."],
               ].map(([title, body], index) => (
                 <motion.div key={title} initial={safe ? { opacity: 0, y: 12 } : { opacity: 0 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: safe ? 0.18 + index * 0.08 : 0, duration: safe ? 0.4 : 0.12 }} className="flex gap-4">
                   <span className="mt-1 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-kelo-500/20 text-xs font-bold text-kelo-200 ring-1 ring-inset ring-kelo-300/20">{index + 1}</span>

@@ -93,15 +93,15 @@ export function Pricing() {
 
             <div className="mt-6 flex items-baseline gap-2">
               <span className="text-5xl font-semibold tracking-tight text-white">
-                <AnimatedNumber value={40} prefix="$" />
+                <AnimatedNumber value={59} prefix="$" />
               </span>
               <span className="text-base font-medium text-white/40">
                 / year
               </span>
             </div>
             <p className="mt-3 text-sm leading-relaxed text-white/50">
-              Billed annually per active caregiver. Agencies, families, and
-              client seats are included at no extra cost.
+              Or $7 per active caregiver each month. Start with 14 days free;
+              agencies, families, and client seats are included at no extra cost.
             </p>
 
             <motion.ul

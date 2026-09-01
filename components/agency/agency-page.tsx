@@ -14,7 +14,7 @@ import { EASE_OUT, useMotionSafe } from "@/lib/motion";
 const VALUES = [
   { marker: "01", title: "Full team visibility", body: "See every caregiver’s visits, notes, and current status from one web dashboard." },
   { marker: "02", title: "Consistent handoffs", body: "Shared care notes keep context intact between shifts, teams, and new hires." },
-  { marker: "03", title: "Zero procurement friction", body: "Your agency receives no invoice. Each caregiver subscribes individually for $40 a year." },
+  { marker: "03", title: "Zero procurement friction", body: "Your agency receives no invoice. Each caregiver chooses $59 a year or $7 a month." },
   { marker: "04", title: "Compliance-friendly records", body: "Visit timers and logged notes create a clear record that can support reviews and audits." },
   { marker: "05", title: "Easy rollout", body: "No IT project or complex setup. Staff install the app while admins work from the browser portal." },
 ];
@@ -22,7 +22,7 @@ const VALUES = [
 const ROLLOUT = [
   { title: "Set up your roster", body: "An agency admin adds the team once in the web portal.", view: "roster" },
   { title: "Assign clients and tasks", body: "Match the right caregivers to the right clients and make responsibilities visible.", view: "assignments" },
-  { title: "Caregivers subscribe", body: "Each caregiver installs Kelo and pays their own $40 annual subscription.", view: "subscriptions" },
+  { title: "Caregivers subscribe", body: "Each caregiver installs Kelo, starts with 14 days free, then chooses $59 yearly or $7 monthly.", view: "subscriptions" },
   { title: "Oversee care from one place", body: "Admins follow visits, notes, and schedules without adding another daily reporting task.", view: "overview" },
 ];
 
@@ -33,10 +33,10 @@ const QUOTES = [
 ];
 
 const FAQS = [
-  ["Do we get billed as an agency?", "No. Kelo does not invoice the agency. Each caregiver subscribes individually for $40 per year, while authorized agency admins receive access to the web dashboard."],
+  ["Do we get billed as an agency?", "No. Kelo does not invoice the agency. Each caregiver chooses $59 per year or $7 per month after a 14-day free trial, while authorized agency admins receive access to the web dashboard."],
   ["What if a caregiver leaves? Do we lose their data?", "Placeholder policy answer: Kelo’s final data-retention and offboarding rules still need to be confirmed before launch. We will replace this answer once that policy is approved."],
   ["Can we see visit history for reviews or audits?", "Yes. Authorized admins can review logged visits and care notes and export records to CSV. These records can support your internal review process, but Kelo does not claim a specific regulatory certification."],
-  ["Is there a minimum number of caregivers?", "No. There are no seat minimums, agency contracts, or bulk tiers. The model remains $40 per caregiver, per year."],
+  ["Is there a minimum number of caregivers?", "No. There are no seat minimums, agency contracts, or bulk tiers. Each caregiver chooses $59 yearly or $7 monthly."],
   ["How is client data separated between caregivers?", "Kelo uses role-based, row-level access. Caregivers see the clients assigned to them, while authorized agency admins can see records belonging to their agency."],
 ];
 
@@ -71,7 +71,7 @@ function AgencyHero() {
         <motion.div initial={safe ? { opacity: 0, y: 22 } : { opacity: 0 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: safe ? 0.75 : 0.2, delay: safe ? 0.35 : 0, ease: EASE_OUT }}>
           <p className="mt-10 text-xs font-semibold uppercase tracking-[.28em] text-kelo-200">For home care agencies</p>
           <h1 className="mx-auto mt-5 max-w-5xl text-balance text-5xl font-medium leading-[.98] tracking-[-.055em] text-white sm:text-7xl lg:text-[6rem]">One thread connecting your <span className="thread-text">whole care team.</span></h1>
-          <p className="mx-auto mt-7 max-w-3xl text-pretty text-lg leading-relaxed text-white/65 sm:text-xl">Give your agency one web dashboard for visits, notes, schedules, and assignments, at $0 direct cost to the agency. Each caregiver subscribes for $40 a year.</p>
+          <p className="mx-auto mt-7 max-w-3xl text-pretty text-lg leading-relaxed text-white/65 sm:text-xl">Give your agency one web dashboard for visits, notes, schedules, and assignments, at $0 direct cost to the agency. Each caregiver chooses $59 yearly or $7 monthly after a 14-day free trial.</p>
         </motion.div>
         <motion.div initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: safe ? 0.8 : 0, duration: safe ? 0.5 : 0.15 }} className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row">
           <CtaButton href="/for-agencies/contact" size="lg">Bring Kelo to your team <ArrowRight /></CtaButton>
@@ -155,9 +155,9 @@ function AgencyTestimonials() {
 }
 
 function AgencyPricing() {
-  const included = ["$0 billed to the agency", "$40/year paid by each caregiver", "No contracts or seat minimums", "Web dashboard included", "CSV exports and API access", "iOS, Android, and web"];
+  const included = ["$0 billed to the agency", "$59/year or $7/month paid by each caregiver", "14-day free trial", "No contracts or seat minimums", "Web dashboard included", "iOS, Android, and web"];
   return (
-    <section id="pricing" className="relative px-5 py-36"><div className="relative mx-auto max-w-2xl text-center"><Eyebrow>Agency-friendly pricing</Eyebrow><h2 className="mt-4 text-balance text-4xl font-medium tracking-[-.04em] text-white sm:text-6xl">Oversight at $0 direct cost to your agency.</h2><LivingCard className="mt-12 p-8 text-left sm:p-12"><p className="text-sm font-semibold uppercase tracking-[.22em] text-kelo-200">Each caregiver subscribes</p><div className="mt-5 flex items-end gap-3"><span className="text-7xl font-medium tracking-[-.06em] text-white">$40</span><span className="pb-2 text-white/50">per caregiver<br />per year</span></div><ul className="mt-9 grid gap-3 sm:grid-cols-2">{included.map((item) => <li key={item} className="flex gap-2 text-sm text-white/68"><span className="text-kelo-200">✓</span>{item}</li>)}</ul><div className="mt-10"><CtaButton href="/for-agencies/contact" size="lg" fullWidth>Bring Kelo to your team <ArrowRight /></CtaButton></div><p className="mt-4 text-center text-xs text-white/40">No agency invoice. No invented tiers or bulk pricing.</p></LivingCard></div></section>
+    <section id="pricing" className="relative px-5 py-36"><div className="relative mx-auto max-w-2xl text-center"><Eyebrow>Agency-friendly pricing</Eyebrow><h2 className="mt-4 text-balance text-4xl font-medium tracking-[-.04em] text-white sm:text-6xl">Oversight at $0 direct cost to your agency.</h2><LivingCard className="mt-12 p-8 text-left sm:p-12"><p className="text-sm font-semibold uppercase tracking-[.22em] text-kelo-200">Each caregiver subscribes</p><div className="mt-5 flex items-end gap-3"><span className="text-7xl font-medium tracking-[-.06em] text-white">$59</span><span className="pb-2 text-white/50">per caregiver<br />per year</span></div><p className="mt-3 text-sm text-white/60">or $7 per caregiver, per month</p><ul className="mt-9 grid gap-3 sm:grid-cols-2">{included.map((item) => <li key={item} className="flex gap-2 text-sm text-white/68"><span className="text-kelo-200">✓</span>{item}</li>)}</ul><div className="mt-10"><CtaButton href="/for-agencies/contact" size="lg" fullWidth>Bring Kelo to your team <ArrowRight /></CtaButton></div><p className="mt-4 text-center text-xs text-white/40">No agency invoice. No invented tiers or bulk pricing. Subscriptions are non-refundable after the trial.</p></LivingCard></div></section>
   );
 }
 

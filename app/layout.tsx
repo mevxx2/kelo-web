@@ -12,11 +12,11 @@ export const metadata: Metadata = {
     template: "%s · Kelo Care",
   },
   description:
-    "Kelo Care keeps caregivers, agencies, and families working from the same picture: visit timers, care notes, and scheduling in one app. $40 per caregiver, per year.",
+    "Kelo Care keeps caregivers, agencies, and families working from the same picture: visit timers, care notes, and scheduling in one app. $59/year or $7/month per caregiver, with a 14-day free trial.",
   openGraph: {
     title: "Kelo Care: Care that everyone can see",
     description:
-      "Visit timers, care notes, and scheduling for home care teams. $40 per caregiver, per year.",
+      "Visit timers, care notes, and scheduling for home care teams. $59/year or $7/month per caregiver, with a 14-day free trial.",
     type: "website",
     images: [
       {

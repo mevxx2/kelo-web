@@ -20,8 +20,8 @@ const FAQS = [
     a: "Exactly what you decide. Roles control access, so a family member can see the day's summary and upcoming visits without seeing pay rates, other clients, or internal agency notes.",
   },
   {
-    q: "Is $40 per caregiver the whole cost?",
-    a: "Yes. Client seats, family accounts, and the agency dashboard are included. There are no per-visit fees, setup fees, or charges for exports.",
+    q: "What does Kelo cost?",
+    a: "Choose $59 per caregiver each year or $7 per caregiver each month. Client seats, family accounts, and the agency dashboard are included. There are no per-visit fees, setup fees, or charges for exports.",
   },
   {
     q: "Can we get our data out?",

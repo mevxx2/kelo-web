@@ -155,7 +155,7 @@ export function Hero() {
           variants={item}
           className="mt-6 text-center text-sm text-white/35"
         >
-          $40 per caregiver, per year. No per-visit fees.
+          $59/year or $7/month per caregiver. 14 days free.
         </motion.p>
       </motion.div>
     </section>

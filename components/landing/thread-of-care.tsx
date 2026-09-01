@@ -63,7 +63,8 @@ const FAQS = [
   ["Do caregivers need to be tech-savvy to use it?", "No. The whole visit flow is two taps: start on arrival, end on the way out. Most caregivers are running their first visit within a minute of installing the app."],
   ["What happens if there's no signal at a client's home?", "Visits log offline and sync as soon as the phone reconnects. Timers keep running locally, so a basement with no bars never costs someone their hours."],
   ["How much can families see?", "Exactly what you decide. Roles control access, so a family member can see the day's summary and upcoming visits without seeing pay rates, other clients, or internal agency notes."],
-  ["Is $40 per caregiver the whole cost?", "Yes. Client seats, family accounts, and the agency dashboard are included. There are no per-visit fees, setup fees, or charges for exports."],
+  ["What does Kelo cost?", "Choose $59 per caregiver each year or $7 per caregiver each month. Client seats, family accounts, and the agency dashboard are included. There are no per-visit fees, setup fees, or charges for exports."],
+  ["Can I get a refund?", "Every subscription starts with a 14-day free trial. After the trial, subscriptions are non-refundable."],
   ["Can we get our data out?", "Any time. Visits, notes, and timesheets export to CSV, and there's an API for agencies already running payroll or scheduling elsewhere."],
   ["Is it available on both iOS and Android?", "Yes, with the same feature set on each. The agency dashboard also runs in any browser."],
 ];
@@ -133,7 +134,7 @@ function Hero() {
           <CtaButton href="/#download" size="lg" className="heartbeat-button">Install Kelo <ArrowRight /></CtaButton>
           <CtaButton href="/#how-it-works" variant="secondary" size="lg" magnetic={.15}>See how it works</CtaButton>
         </motion.div>
-        <p className="mt-5 text-sm text-white/45">$40 per caregiver, per year. No per-visit fees.</p>
+        <p className="mt-5 text-sm text-white/45">$59/year or $7/month per caregiver. Start with 14 days free.</p>
 
         <div className="relative mx-auto mt-14 h-[350px] max-w-5xl sm:h-[430px]">
           {["schedule", "notes", "timer", "dashboard"].map((screen, i) => (
@@ -236,10 +237,10 @@ function Pricing() {
         <Eyebrow>Simple pricing</Eyebrow>
         <LivingCard className="mt-12 p-8 text-left sm:p-12" breathe={1.022}>
           <p className="text-sm font-semibold uppercase tracking-[.22em] text-kelo-200">Everything included</p>
-          <div className="mt-5 flex items-end gap-3"><span className="text-7xl font-medium tracking-[-.06em] text-white">$40</span><span className="pb-2 text-white/50">per caregiver<br/>per year</span></div>
+          <div className="mt-5 flex items-end gap-3"><span className="text-7xl font-medium tracking-[-.06em] text-white">$59</span><span className="pb-2 text-white/50">per caregiver<br/>per year</span></div><p className="mt-3 text-sm text-white/60">or $7 per caregiver, per month</p>
           <ul className="mt-9 grid gap-3 sm:grid-cols-2">{included.map((item) => <li key={item} className="flex gap-2 text-sm text-white/68"><span className="text-kelo-200">✓</span>{item}</li>)}</ul>
           <div className="mt-10"><CtaButton href="/#download" size="lg" fullWidth className="heartbeat-button">Install Kelo <ArrowRight /></CtaButton></div>
-          <p className="mt-4 text-center text-xs text-white/40">No setup fees. No per-visit fees. Purchase securely inside the app.</p>
+          <p className="mt-4 text-center text-xs text-white/40">14 days free. No setup or per-visit fees. Subscriptions are non-refundable after the trial. Purchase securely inside the app.</p>
         </LivingCard>
       </div>
     </section>
@@ -252,7 +253,7 @@ function Download() {
       <motion.div initial={{ opacity: 0, y: 22 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: .3 }} transition={{ duration: .6, ease: EASE_OUT }} className="mx-auto max-w-3xl">
         <Eyebrow>Get Kelo Care</Eyebrow>
         <h2 className="mt-4 text-balance text-4xl font-medium tracking-[-.04em] text-white sm:text-6xl">Install the app. Keep care moving.</h2>
-        <p className="mx-auto mt-5 max-w-xl text-lg leading-relaxed text-white/58">Kelo Care is available for iPhone and Android. Download the app, then purchase your $40 yearly plan securely inside Kelo.</p>
+        <p className="mx-auto mt-5 max-w-xl text-lg leading-relaxed text-white/58">Kelo Care is available for iPhone and Android. Download the app, start your 14-day free trial, then choose $59 yearly or $7 monthly securely inside Kelo.</p>
         <StoreButtons className="mt-9" />
         <p className="mt-5 text-xs text-white/38">Store links will be activated when the listings are live.</p>
       </motion.div>
