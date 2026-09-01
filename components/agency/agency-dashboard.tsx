@@ -40,7 +40,9 @@ export function AgencyDashboard() {
   useEffect(() => {
     void refresh();
     const interval = window.setInterval(() => {
-      if (document.visibilityState === "visible") void refresh();
+      const active = document.activeElement;
+      const editing = active instanceof HTMLSelectElement || active instanceof HTMLInputElement || active instanceof HTMLTextAreaElement;
+      if (document.visibilityState === "visible" && !editing) void refresh();
     }, 10_000);
     return () => window.clearInterval(interval);
   }, []);
