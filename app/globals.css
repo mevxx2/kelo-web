@@ -330,7 +330,9 @@ html[data-theme="light"] .care-canvas[data-care-variant="agency"] thead {
   background: rgba(238, 241, 255, 0.7) !important;
 }
 
-html[data-theme="light"] .care-canvas[data-care-variant="agency"] input {
+html[data-theme="light"] .care-canvas[data-care-variant="agency"] input,
+html[data-theme="light"] .care-canvas[data-care-variant="agency"] select,
+html[data-theme="light"] .care-canvas[data-care-variant="agency"] textarea {
   background: rgba(255, 255, 255, 0.88) !important;
   border-color: rgba(37, 99, 235, 0.16) !important;
 }
@@ -451,4 +453,12 @@ html[data-theme="light"] .theme-toggle-thumb {
 .agency-select option {
   background: #f8fbff;
   color: #0f172a;
+}
+
+.agency-select {
+  color-scheme: dark;
+}
+
+html[data-theme="light"] .agency-select {
+  color-scheme: light;
 }
