@@ -11,7 +11,9 @@ import { CtaButton } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { EASE_OUT, useMotionSafe } from "@/lib/motion";
 
-const HOME_LINKS = [
+type NavLink = { label: string; href: string; newTab?: boolean };
+
+const HOME_LINKS: NavLink[] = [
   { label: "Features", href: "/#features" },
   { label: "How it works", href: "/#how-it-works" },
   { label: "Pricing", href: "/#pricing" },
@@ -20,7 +22,7 @@ const HOME_LINKS = [
   { label: "For Agencies", href: "/for-agencies", newTab: true },
 ];
 
-const AGENCY_LINKS = [
+const AGENCY_LINKS: NavLink[] = [
   { label: "Why Kelo", href: "/for-agencies#why-kelo" },
   { label: "Rollout", href: "/for-agencies#rollout" },
   { label: "Dashboard", href: "/for-agencies#dashboard" },
