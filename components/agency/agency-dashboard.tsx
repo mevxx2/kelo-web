@@ -113,6 +113,7 @@ function Reports({ workspace }: { workspace: Workspace }) {
             <p className="mt-2 text-sm text-white/55">A clear weekly snapshot from the care your team recorded in Kelo.</p>
           </div>
           <div className="flex flex-wrap items-center gap-2">
+            <button type="button" disabled={!clientId} onClick={() => weeklyPdf({ agencyName: workspace.agencyName, clientName: client(clientId, workspace), dateRange, summaryLine, exception, visits: `${completedVisits.length} of ${clientVisits.length} completed`, medications: medicationText, meals: mealText, activity: activityText, comparison: visitComparison, nextWeek, notes: notes.map((note) => ({ text: note.text, byline: `From ${caregiver(note.author_id, workspace)}, ${new Date(note.created_at).toLocaleDateString(undefined, { weekday: "short" })}` })) })} className="rounded-full bg-kelo-500 px-3 py-2 text-xs font-semibold text-white shadow-[0_8px_20px_-10px_rgba(72,124,255,.8)] transition hover:bg-kelo-400 disabled:cursor-not-allowed disabled:opacity-40">Download weekly PDF</button>
             <button type="button" onClick={() => setWeekStart(iso(previousStart))} className="rounded-full border border-white/15 px-3 py-2 text-xs font-semibold text-white/80 hover:border-kelo-300/50">Previous</button>
             <button type="button" onClick={() => setWeekStart(iso(currentMonday))} className="rounded-full border border-white/15 px-3 py-2 text-xs font-semibold text-white/80 hover:border-kelo-300/50">This week</button>
             <button type="button" onClick={() => setWeekStart(iso(nextStart))} className="rounded-full border border-white/15 px-3 py-2 text-xs font-semibold text-white/80 hover:border-kelo-300/50">Next</button>
@@ -128,7 +129,7 @@ function Reports({ workspace }: { workspace: Workspace }) {
       </div> : <p className="p-6 text-sm text-white/55">Add a client to begin viewing weekly reports.</p>}
     </LivingCard>
     <LivingCard className="overflow-hidden p-0"><div className="p-6"><p className="text-xs font-semibold uppercase tracking-[.2em] text-kelo-200">From the care team</p><h3 className="mt-2 text-xl font-semibold text-white">Caregiver notes</h3></div><div className="divide-y divide-white/[.07]">{notes.length ? notes.map((note) => <div key={`${note.created_at}-${note.author_id}`} className="p-5"><p className="text-sm leading-relaxed text-white/75">“{note.text}”</p><p className="mt-3 text-xs font-semibold text-kelo-100">From {caregiver(note.author_id, workspace)}, {new Date(note.created_at).toLocaleDateString(undefined, { weekday: "short" })}</p></div>) : <p className="p-6 text-sm text-white/50">No caregiver notes were recorded for this client during this week.</p>}</div></LivingCard>
-    <LivingCard className="overflow-hidden p-0"><div className="p-6"><p className="text-xs font-semibold uppercase tracking-[.2em] text-kelo-200">Completed care</p><h3 className="mt-2 text-xl font-semibold text-white">Session records</h3><p className="mt-2 text-sm text-white/48">Download a PDF for any completed caregiving session.</p></div><div className="divide-y divide-white/[.07]">{complete.length ? complete.map((visit) => <div key={visit.id} className="flex flex-wrap items-center justify-between gap-4 p-5"><div><p className="font-semibold text-white">{visit.date} · {visit.start_time}–{visit.end_time}</p><p className="mt-1 text-sm text-white/48">{caregiver(visit.caregiver_id, workspace)}</p></div><button type="button" onClick={() => pdf(visit, workspace)} className="rounded-full bg-kelo-500 px-4 py-2 text-sm font-semibold text-white">Download PDF</button></div>) : <p className="p-6 text-sm text-white/50">Completed sessions will appear here once caregivers finish them in Kelo.</p>}</div></LivingCard>
+    <LivingCard className="overflow-hidden p-0"><div className="p-6"><p className="text-xs font-semibold uppercase tracking-[.2em] text-kelo-200">Completed care</p><h3 className="mt-2 text-xl font-semibold text-white">Session records</h3><p className="mt-2 text-sm text-white/48">Download a PDF for any individual completed caregiving session.</p></div><div className="divide-y divide-white/[.07]">{complete.length ? complete.map((visit) => <div key={visit.id} className="flex flex-wrap items-center justify-between gap-4 p-5"><div><p className="font-semibold text-white">{visit.date} · {visit.start_time}–{visit.end_time}</p><p className="mt-1 text-sm text-white/48">{caregiver(visit.caregiver_id, workspace)}</p></div><button type="button" onClick={() => pdf(visit, workspace)} className="rounded-full bg-kelo-500 px-4 py-2 text-sm font-semibold text-white">Download session PDF</button></div>) : <p className="p-6 text-sm text-white/50">Completed sessions will appear here once caregivers finish them in Kelo.</p>}</div></LivingCard>
   </div>;
 }
 function ReportFact({ title, value }: { title: string; value: string }) { return <div className="rounded-2xl bg-white/[.055] p-4"><p className="text-xs font-semibold uppercase tracking-[.15em] text-white/42">{title}</p><p className="mt-2 text-sm leading-relaxed text-white/78">{value}</p></div>; }
@@ -142,4 +143,53 @@ function addDays(d: Date, n: number) { const r = new Date(d); r.setDate(r.getDat
 function iso(d: Date) { return d.toISOString().slice(0, 10); }
 function visitHours(visit: Visit) { const [startHour, startMinute] = visit.start_time.split(":").map(Number); const [endHour, endMinute] = visit.end_time.split(":").map(Number); return Math.max(0, (endHour * 60 + endMinute - startHour * 60 - startMinute) / 60); }
 function formatHours(hours: number) { return `${Number.isInteger(hours) ? hours : hours.toFixed(1)} hour${hours === 1 ? "" : "s"}`; }
+function weeklyPdf(report: { agencyName: string; clientName: string; dateRange: string; summaryLine: string; exception: string; visits: string; medications: string; meals: string; activity: string; comparison: string; nextWeek: string; notes: { text: string; byline: string }[] }) {
+  const doc = new jsPDF({ unit: "mm", format: "a4" });
+  const width = 210;
+  const margin = 18;
+  const contentWidth = width - margin * 2;
+  const printableDateRange = report.dateRange.replace(/[–—]/g, "-");
+  const printableSummary = report.summaryLine.replace(/ · /g, " | ");
+  let y = 20;
+  const nextPage = () => { doc.addPage(); y = 20; };
+  const ensureRoom = (height: number) => { if (y + height > 278) nextPage(); };
+  const writeWrapped = (text: string, size = 10.5, color: [number, number, number] = [43, 52, 73], lineHeight = 5.5) => {
+    doc.setFont("helvetica", "normal"); doc.setFontSize(size); doc.setTextColor(...color);
+    const lines = doc.splitTextToSize(text, contentWidth);
+    ensureRoom(lines.length * lineHeight + 2);
+    doc.text(lines, margin, y, { lineHeightFactor: lineHeight / size });
+    y += lines.length * lineHeight;
+  };
+  const fact = (label: string, value: string) => {
+    ensureRoom(18); doc.setFillColor(245, 248, 255); doc.roundedRect(margin, y, contentWidth, 16, 3, 3, "F");
+    doc.setFont("helvetica", "bold"); doc.setFontSize(8); doc.setTextColor(68, 89, 159); doc.text(label.toUpperCase(), margin + 5, y + 5.5);
+    doc.setFont("helvetica", "normal"); doc.setFontSize(10); doc.setTextColor(31, 41, 55); doc.text(doc.splitTextToSize(value, contentWidth - 10), margin + 5, y + 11, { lineHeightFactor: 1.2 }); y += 19;
+  };
+  doc.setProperties({ title: `Kelo weekly report - ${report.clientName}`, subject: `Week of ${printableDateRange}`, author: "Kelo Care" });
+  doc.setFillColor(20, 54, 190); doc.rect(0, 0, width, 54, "F");
+  doc.setFont("helvetica", "bold"); doc.setFontSize(23); doc.setTextColor(255, 255, 255); doc.text("kelo", margin, 21);
+  doc.setFontSize(8.5); doc.setTextColor(205, 220, 255); doc.text("WEEKLY CARE REPORT", margin, 31);
+  doc.setFontSize(15); doc.setTextColor(255, 255, 255); doc.text(report.clientName, margin, 41);
+  doc.setFont("helvetica", "normal"); doc.setFontSize(9); doc.setTextColor(220, 230, 255); doc.text(`Week of ${printableDateRange}`, margin, 48);
+  y = 66;
+  doc.setFont("helvetica", "bold"); doc.setFontSize(11); doc.setTextColor(20, 35, 90); doc.text(printableSummary, margin, y); y += 10;
+  const exceptionLines = doc.splitTextToSize(report.exception, contentWidth - 10);
+  const exceptionHeight = Math.max(19, exceptionLines.length * 4.4 + 10);
+  doc.setFillColor(232, 239, 255); doc.roundedRect(margin, y, contentWidth, exceptionHeight, 3, 3, "F");
+  doc.setFont("helvetica", "bold"); doc.setFontSize(9); doc.setTextColor(20, 54, 190); doc.text("ONE THING TO KNOW", margin + 5, y + 6);
+  doc.setFont("helvetica", "normal"); doc.setFontSize(9.5); doc.setTextColor(35, 53, 112); doc.text(exceptionLines, margin + 5, y + 12, { lineHeightFactor: 1.2 }); y += exceptionHeight + 9;
+  fact("Visits", report.visits); fact("Medications", report.medications); fact("Meals", report.meals); fact("Activity", report.activity);
+  ensureRoom(36); doc.setDrawColor(218, 225, 241); doc.line(margin, y, width - margin, y); y += 8;
+  doc.setFont("helvetica", "bold"); doc.setFontSize(10); doc.setTextColor(20, 35, 90); doc.text("Compared with last week", margin, y); y += 6; writeWrapped(report.comparison, 10.5); y += 5;
+  doc.setFont("helvetica", "bold"); doc.setFontSize(10); doc.setTextColor(20, 35, 90); doc.text("Next week", margin, y); y += 6; writeWrapped(report.nextWeek, 10.5); y += 8;
+  ensureRoom(20); doc.setDrawColor(218, 225, 241); doc.line(margin, y, width - margin, y); y += 9;
+  doc.setFont("helvetica", "bold"); doc.setFontSize(12); doc.setTextColor(20, 35, 90); doc.text("From the care team", margin, y); y += 8;
+  if (report.notes.length) {
+    report.notes.forEach((note) => { const noteLines = doc.splitTextToSize(`"${note.text}"`, contentWidth - 10); const noteHeight = Math.max(20, noteLines.length * 4.4 + 13); ensureRoom(noteHeight + 4); doc.setFillColor(250, 251, 255); doc.roundedRect(margin, y, contentWidth, noteHeight, 3, 3, "F"); doc.setFont("helvetica", "italic"); doc.setFontSize(9.5); doc.setTextColor(48, 57, 78); doc.text(noteLines, margin + 5, y + 6, { lineHeightFactor: 1.2 }); doc.setFont("helvetica", "bold"); doc.setFontSize(8.5); doc.setTextColor(68, 89, 159); doc.text(note.byline, margin + 5, y + noteHeight - 4); y += noteHeight + 4; });
+  } else writeWrapped("No caregiver notes were recorded for this client during this week.", 10.5);
+  const pages = doc.getNumberOfPages();
+  for (let page = 1; page <= pages; page += 1) { doc.setPage(page); doc.setDrawColor(218, 225, 241); doc.line(margin, 286, width - margin, 286); doc.setFont("helvetica", "normal"); doc.setFontSize(7.5); doc.setTextColor(103, 116, 145); doc.text(`${report.agencyName} - Kelo Care`, margin, 291); doc.text(`Page ${page} of ${pages}`, width - margin, 291, { align: "right" }); }
+  doc.save(`kelo-weekly-report-${safeFilename(report.clientName)}-${printableDateRange.replace(/[^a-z0-9]+/gi, "-").toLowerCase()}.pdf`);
+}
+function safeFilename(value: string) { return value.trim().replace(/[^a-z0-9]+/gi, "-").replace(/(^-|-$)/g, "").toLowerCase() || "client"; }
 function pdf(v: Visit, w: Workspace) { const doc = new jsPDF(); doc.setFontSize(20); doc.text("Kelo Care", 20, 24); doc.setFontSize(14); doc.text("Completed caregiving session", 20, 36); doc.setFontSize(11); doc.text([`Agency: ${w.agencyName}`, `Client: ${client(v.client_id, w)}`, `Caregiver: ${caregiver(v.caregiver_id, w)}`, `Date: ${v.date}`, `Time: ${v.start_time}–${v.end_time}`, "Status: Completed", "", "This report confirms the scheduled session was marked complete in Kelo."], 20, 54, { lineHeightFactor: 1.7 }); doc.save(`kelo-session-${v.date}.pdf`); }
