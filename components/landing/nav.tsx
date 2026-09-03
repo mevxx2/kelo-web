@@ -17,7 +17,7 @@ const HOME_LINKS = [
   { label: "Pricing", href: "/#pricing" },
   { label: "FAQ", href: "/#faq" },
   { label: "Contact", href: "/#contact" },
-  { label: "For Agencies", href: "/for-agencies" },
+  { label: "For Agencies", href: "/for-agencies", newTab: true },
 ];
 
 const AGENCY_LINKS = [
@@ -127,6 +127,8 @@ export function Nav() {
                 <li key={link.href} className="relative">
                   <Link
                     href={link.href}
+                    target={link.newTab ? "_blank" : undefined}
+                    rel={link.newTab ? "noreferrer" : undefined}
                     className={cn(
                       "nav-underline relative z-10 block whitespace-nowrap px-3 py-2 text-sm font-medium text-white/65 xl:px-4",
                       isActive && "text-white",
@@ -175,6 +177,8 @@ export function Nav() {
                   <li key={link.href}>
                     <Link
                       href={link.href}
+                      target={link.newTab ? "_blank" : undefined}
+                      rel={link.newTab ? "noreferrer" : undefined}
                       onClick={() => setMenuOpen(false)}
                       className="block rounded-2xl px-4 py-3 text-base font-medium text-white/70 transition-colors hover:bg-white/5 hover:text-kelo-300"
                     >
