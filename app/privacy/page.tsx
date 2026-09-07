@@ -1,11 +1,8 @@
 import type { Metadata } from "next";
 
-import { CareCanvas } from "@/components/landing/care-thread";
-import { SiteFooter } from "@/components/site-footer";
-import { LivingCard } from "@/components/ui/living-card";
+import { LegalPage } from "@/components/legal-page";
 
-const description =
-  "Learn how Kelo Care collects, uses, protects, and shares information used to coordinate care.";
+const description = "Kelo Care Privacy Policy - information, access, security, and privacy choices.";
 
 export const metadata: Metadata = {
   title: "Privacy Policy",
@@ -15,94 +12,22 @@ export const metadata: Metadata = {
 };
 
 const sections = [
-  {
-    title: "1. What this policy covers",
-    body: "This Privacy Policy explains how Kelo Care handles information when you use the Kelo Care mobile app, agency web portal, website, and related support services (together, the “Services”). It applies to caregivers, agency leaders, family members, and other authorized users of the Services.",
-  },
-  {
-    title: "2. Information we collect",
-    body: "We collect information you provide to create or use an account, such as your name, email address, password, role, and agency affiliation. We also process care-coordination information entered into the Services, including client and caregiver details, visit dates and times, schedules, assignments, care notes, routines, medication records, task completion records, reports, and messages. If a caregiver uses a location-stamped visit feature, we process the location stamp associated with the visit. We may also receive limited technical information needed to operate and secure the Services, such as device, browser, log, and diagnostic information.",
-  },
-  {
-    title: "3. How we use information",
-    body: "We use information to provide and improve the Services; authenticate users; show the right records to authorized people; create schedules, reports, and care records; provide support; communicate about the Services; prevent misuse; and protect the security and reliability of Kelo Care.",
-  },
-  {
-    title: "4. Who can see care information",
-    body: "Care information is shared within Kelo Care according to the role and access permissions set for an account. For example, authorized agency leaders can access records belonging to their agency, while caregivers can access clients and work assigned to them. Users and agencies are responsible for assigning access carefully and keeping their account credentials private.",
-  },
-  {
-    title: "5. When we share information",
-    body: "We share information with service providers that help us run Kelo Care, including our hosted database and authentication provider, Supabase. These providers may process information only to provide services to Kelo Care. We may also disclose information when required by law, to protect the rights, safety, and security of Kelo Care or others, or as part of a business transaction such as a merger or acquisition. Kelo Care does not sell personal information.",
-  },
-  {
-    title: "6. Retention and deletion",
-    body: "We retain information for as long as needed to provide the Services, meet legal or operational requirements, resolve disputes, and enforce agreements. An agency may need to retain care records for its own operational or legal reasons. To request account deletion or ask about information associated with your account, contact us at hello@kelo-care.com. We may need to verify your identity and coordinate with the relevant agency before acting on a request.",
-  },
-  {
-    title: "7. Your choices and rights",
-    body: "You can update certain account information through the Services. Depending on where you live, you may have rights to request access to, correction of, deletion of, or a copy of your personal information, subject to applicable law. To make a request, email hello@kelo-care.com with enough detail for us to understand and verify it.",
-  },
-  {
-    title: "8. Security",
-    body: "We use reasonable administrative, technical, and organizational safeguards designed to protect information. No method of transmission or storage is completely secure, so please use a strong, unique password and contact us promptly if you believe your account has been accessed without permission.",
-  },
-  {
-    title: "9. Changes to this policy",
-    body: "We may update this Privacy Policy as Kelo Care evolves. If we make material changes, we will post the updated policy here and update the effective date below. Continued use of the Services after an update means the updated policy applies to your use.",
-  },
+  ["1. Who operates Kelo", "Kelo Care is a pre-launch care-coordination product currently operated under the Kelo Care name. References to “Kelo,” “we,” “us,” or “our” mean the operator of the Kelo Care service. For privacy questions, requests, or complaints, contact hello@kelo-care.com."],
+  ["2. Information we collect", "We collect account and profile information such as name, email address, role, authentication identifiers, optional profile photo, notification preferences, and agency or family connections. Caregivers and agency administrators may enter client names, care plans, medications, routines, preferences, visit schedules, check-in and check-out records, task results, handoff notes, emergency contacts, feedback, assignments, and reports. Clients and authorized family members may provide care information and feedback. We also process limited device, application, session, notification-token, diagnostic, and usage information needed to operate, secure, and improve Kelo."],
+  ["3. Google sign-in data", "If you choose Sign in with Google, Google and our authentication provider may provide Kelo with your Google account identifier, name, email address, and profile image. Kelo uses this information only to create, identify, secure, and display your Kelo account. Kelo does not request access to Gmail, Google Drive, contacts, calendars, or other Google services through basic Google sign-in. We do not sell Google user data or use it for advertising."],
+  ["4. Why we use information", "We use information to create and secure accounts; verify active sessions; apply role-based access; connect caregivers, agencies, clients, and authorized family members; coordinate schedules, visits, medications, routines, reminders, handoffs, corrections, and reports; deliver service messages; provide support; prevent fraud and misuse; maintain audit records; process subscriptions; and meet legal obligations. Kelo does not use care information for targeted advertising."],
+  ["5. Role-aware access and sharing", "Kelo is designed to limit access according to role, agency membership, assignment, and family connection. Assigned caregivers may access the clients and work records needed for their duties. Agency team leaders may access their agency's team, clients, schedules, reports, and operational records. Clients and authorized family members may access only the records made available for their linked client. A client may receive a report directly from a personal caregiver, while an agency may review and deliver combined reports for agency-managed care. Users must not share information beyond their authority."],
+  ["6. Service providers", "Kelo uses service providers only as needed to operate the service. These may include Supabase for authentication, database, file storage, and server functions; Google and Apple for optional account sign-in; Expo, Apple, and Google for application distribution and notifications; Resend for service email delivery; RevenueCat, Apple App Store, and Google Play for subscription and entitlement processing; and hosting, monitoring, security, or customer-support providers. These providers process information under their own terms and privacy commitments. Kelo does not share care information with advertisers."],
+  ["7. Notifications, email, and photos", "Kelo may send local reminders, remote push notifications, and service emails about assignments, visits, missed work, invitations, and secure reports. Where practical, notification and email text is minimized so detailed care information remains inside the authenticated Kelo app. Profile photos are stored privately and delivered through time-limited authorized links. Users should still protect their devices and avoid exposing sensitive information on lock screens."],
+  ["8. Storage and security", "Information is transmitted using encrypted connections and stored using service-provider security controls. Kelo uses authentication, role-based database restrictions, agency and assignment scoping, validated server operations, session revocation checks, private file storage, signed photo links, and audit or correction records. No system can guarantee complete security. Users must protect their credentials and promptly report suspected unauthorized access."],
+  ["9. Retention and deletion", "Kelo retains information while an account is active and for as long afterward as reasonably needed to provide the service, preserve authorized operational and audit records, resolve disputes, prevent abuse, and satisfy legal obligations. Retention may vary by record type and by an agency's lawful recordkeeping duties. To request access, correction, export, or deletion, contact hello@kelo-care.com. We may verify the request before acting. Account deletion may remove personal access while certain shared agency, billing, security, or care records remain where retention is legally or operationally required."],
+  ["10. Your privacy choices", "Depending on applicable law, users may have rights to request access, correction, deletion, portability, restriction, or objection to certain processing. Users may also manage notification permissions through their device and disconnect optional social sign-in where supported. These rights may be limited where information must be retained for security, legal, billing, dispute, or authorized recordkeeping purposes."],
+  ["11. Adults and vulnerable people", "Kelo accounts are intended for people aged 18 or older. Kelo supports coordination involving adult clients, including elderly or vulnerable adults. Users entering information about another person must have an appropriate legal basis or permission to do so. Kelo is not presently intended to store or coordinate care information about minors."],
+  ["12. Medical and emergency notice", "Kelo is a task, visit, reporting, and workforce coordination service. It does not diagnose conditions, recommend treatment, provide medical advice, replace professional judgment, or act as an emergency service or medical device. Do not use Kelo as the only safeguard for medications, urgent care, or emergencies. Contact local emergency services or an appropriately qualified professional when urgent help is needed."],
+  ["13. International processing", "Service providers may process information in countries other than the user's country. Where required, Kelo will use appropriate contractual, organizational, or legal safeguards for cross-border processing."],
+  ["14. Changes to this policy", "We may update this Privacy Policy as Kelo, its providers, or legal requirements change. The current version and effective date will be displayed in the app and on the Kelo website. Material changes may require notice or renewed acceptance."],
 ];
 
 export default function PrivacyPage() {
-  return (
-    <CareCanvas>
-      <section id="hero" className="relative px-5 pb-16 pt-36 sm:pb-24 sm:pt-44">
-        <div className="mx-auto max-w-3xl">
-          <p className="text-xs font-semibold uppercase tracking-[.28em] text-kelo-200">
-            Kelo Care
-          </p>
-          <h1 className="mt-5 text-balance text-5xl font-medium tracking-[-.055em] text-white sm:text-7xl">
-            Privacy Policy
-          </h1>
-          <p className="mt-6 max-w-2xl text-lg leading-relaxed text-white/65">
-            How Kelo Care handles the information used to coordinate care.
-          </p>
-          <p className="mt-5 text-sm text-white/45">Effective date: September 6, 2026</p>
-        </div>
-      </section>
-
-      <section className="relative px-5 pb-28 sm:pb-36">
-        <div className="mx-auto max-w-3xl">
-          <LivingCard className="p-6 sm:p-10">
-            <div className="space-y-10">
-              {sections.map((section) => (
-                <section key={section.title}>
-                  <h2 className="text-xl font-semibold tracking-tight text-white sm:text-2xl">
-                    {section.title}
-                  </h2>
-                  <p className="mt-3 text-base leading-relaxed text-white/65">
-                    {section.body}
-                  </p>
-                </section>
-              ))}
-
-              <section className="border-t border-white/10 pt-10">
-                <h2 className="text-xl font-semibold tracking-tight text-white sm:text-2xl">
-                  10. Contact us
-                </h2>
-                <p className="mt-3 text-base leading-relaxed text-white/65">
-                  Questions about this Privacy Policy or Kelo Care&apos;s privacy practices can be sent to{" "}
-                  <a className="font-medium text-kelo-200 underline underline-offset-4" href="mailto:hello@kelo-care.com">
-                    hello@kelo-care.com
-                  </a>.
-                </p>
-              </section>
-            </div>
-          </LivingCard>
-        </div>
-      </section>
-
-      <SiteFooter />
-    </CareCanvas>
-  );
+  return <LegalPage title="Privacy Policy" version="Version 1.2-draft" sections={sections} contact="Questions and privacy requests may be sent to hello@kelo-care.com. This contact information will be updated if a registered business entity, privacy representative, or formal mailing address is established." />;
 }
