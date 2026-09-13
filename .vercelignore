@@ -1,0 +1,6 @@
+*.tar.gz
+/*.jpg
+/*.png
+/*.stl
+.open-next/
+.open-next-build/
