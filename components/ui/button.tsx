@@ -32,8 +32,8 @@ const VARIANTS: Record<Variant, string> = {
 };
 
 const SIZES: Record<Size, string> = {
-  md: "h-11 px-5 text-sm",
-  lg: "h-14 px-7 text-base",
+  md: "min-h-11 px-5 py-2.5 text-sm",
+  lg: "min-h-14 px-7 py-3 text-base",
 };
 
 export function CtaButton({
@@ -51,7 +51,7 @@ export function CtaButton({
 }: CtaButtonProps) {
   void _magnetic;
   const classes = cn(
-    "group relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-full font-semibold",
+    "group relative inline-flex min-w-0 max-w-full items-center justify-center gap-2 overflow-hidden rounded-full text-center font-semibold",
     "transition-[transform,background-color,color,box-shadow] duration-200 hover:scale-[1.025] active:scale-[.98] motion-reduce:transform-none",
     "disabled:cursor-not-allowed disabled:opacity-60",
     VARIANTS[variant],
@@ -63,7 +63,7 @@ export function CtaButton({
   const inner = (
     <>
       <span aria-hidden="true" className="pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/20 to-transparent transition-transform duration-500 group-hover:translate-x-full motion-reduce:hidden" />
-      <span className="relative flex items-center gap-2">{children}</span>
+      <span className="relative flex min-w-0 items-center justify-center gap-2 [overflow-wrap:anywhere] [&>svg]:shrink-0">{children}</span>
     </>
   );
 
