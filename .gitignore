@@ -14,4 +14,13 @@ yarn-error.log*
 .vercel
 *.tsbuildinfo
 
+# Local Site packages and ad-hoc working files are retained on this machine,
+# but must not become part of the website source during a publish.
+kelo-care-sites-v*.tar.gz
+tmp/
+sleeve.stl
+0383bb3e7f1caf0207428cc5c231dda5.jpg
+kelo.png
+kelo (1).png
+
 .vercel
