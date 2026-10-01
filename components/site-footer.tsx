@@ -15,6 +15,7 @@ export function SiteFooter() {
         </div>
         <div className="mt-14 flex flex-col gap-3 border-t border-white/10 pt-7 text-sm text-white/35 sm:flex-row sm:justify-between">
           <p>© {new Date().getFullYear()} Kelo Care. All rights reserved.</p>
+          <p>Powered by <span className="font-medium text-white/55">Redmoose AI</span></p>
           <p>Made for caregivers.</p>
         </div>
       </div>
