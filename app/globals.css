@@ -109,6 +109,21 @@
   transition: color 500ms ease;
 }
 
+.agency-workspace-canvas {
+  background: linear-gradient(155deg, #020713, #091837 56%, #100d29);
+}
+
+html[data-theme="light"] .agency-workspace-canvas {
+  background: linear-gradient(155deg, #fff, #eef4ff 58%, #f8f7ff);
+}
+
+/* Opaque workspace layers keep scrolling and dropdown opening inexpensive. */
+.agency-workspace-canvas .backdrop-blur-xl,
+.agency-workspace-canvas .living-card {
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+
 .care-ambient {
   background:
     radial-gradient(circle at 50% 0%, rgba(37, 99, 235, 0.08), transparent 22%),
