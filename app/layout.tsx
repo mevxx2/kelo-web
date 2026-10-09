@@ -72,6 +72,9 @@ export default function RootLayout({
         <main id="main">
           <PageTransition>{children}</PageTransition>
         </main>
+        <footer className="site-attribution relative z-10 border-t border-white/10 bg-ink-950 px-5 py-5 text-center text-sm text-white/60">
+          Powered by <span className="font-semibold text-white/80">Redmoose AI</span>
+        </footer>
       </body>
     </html>
   );
