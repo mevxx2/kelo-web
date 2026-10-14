@@ -1,60 +1,62 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 
-import { CareCanvas } from "@/components/landing/care-thread";
-import { SiteFooter } from "@/components/site-footer";
-import { LivingCard } from "@/components/ui/living-card";
-
-const description = "How to delete a Kelo Care account and what happens to associated information.";
+import { SitePage } from "../../components/home/Chrome";
 
 export const metadata: Metadata = {
-  title: "Delete your account",
-  description,
-  openGraph: { title: "Delete your Kelo Care account", description, images: ["/og.png"] },
-  twitter: { title: "Delete your Kelo Care account", description, images: ["/og.png"] },
+  title: "Delete your account | Kelo Care",
+  description: "How to permanently delete your Kelo Care account and associated personal data.",
 };
+
+const MAIL = "mailto:hello@kelo-care.com?subject=Delete%20my%20Kelo%20account";
 
 export default function DeleteAccountPage() {
   return (
-    <CareCanvas>
-      <section className="relative px-5 pb-12 pt-36 sm:pb-18 sm:pt-44">
-        <div className="mx-auto max-w-3xl">
-          <p className="text-xs font-semibold uppercase tracking-[.28em] text-kelo-200">Kelo Care account</p>
-          <h1 className="mt-5 text-balance text-5xl font-medium tracking-[-.055em] text-white sm:text-7xl">Delete your account</h1>
-          <p className="mt-6 max-w-2xl text-lg leading-relaxed text-white/65">You can delete your Kelo Care account in the app whenever you need to. This page explains the quickest way to do that and what deletion means for your information.</p>
+    <SitePage>
+      <section className="rd-doc-hero">
+        <div className="rd-shell">
+          <p className="rd-eyebrow">Account &amp; data</p>
+          <h1>Delete your Kelo account</h1>
+          <p className="rd-doc-meta">
+            Open the Kelo Care app to delete your account or submit a deletion request. If you cannot access the app,
+            contact us from the email address connected to your account.
+          </p>
         </div>
       </section>
 
-      <section className="relative px-5 pb-28 sm:pb-36">
-        <div className="mx-auto grid max-w-3xl gap-5">
-          <LivingCard className="p-6 sm:p-9">
-            <p className="text-xs font-semibold uppercase tracking-[.22em] text-kelo-200">In the app</p>
-            <h2 className="mt-3 text-2xl font-semibold tracking-tight text-white sm:text-3xl">Delete it yourself</h2>
-            <ol className="mt-6 space-y-4 text-base leading-relaxed text-white/65">
-              <li className="flex gap-3"><span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-kelo-500/20 text-sm font-semibold text-kelo-100">1</span><span>Open Kelo Care and go to <strong className="font-semibold text-white">Profile</strong>.</span></li>
-              <li className="flex gap-3"><span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-kelo-500/20 text-sm font-semibold text-kelo-100">2</span><span>Choose <strong className="font-semibold text-white">Delete account</strong> and follow the confirmation steps.</span></li>
-              <li className="flex gap-3"><span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-kelo-500/20 text-sm font-semibold text-kelo-100">3</span><span>You may be asked to sign in again before deletion is completed.</span></li>
-            </ol>
-          </LivingCard>
-
-          <LivingCard className="p-6 sm:p-9">
-            <p className="text-xs font-semibold uppercase tracking-[.22em] text-kelo-200">Need help?</p>
-            <h2 className="mt-3 text-2xl font-semibold tracking-tight text-white sm:text-3xl">Request deletion by email</h2>
-            <p className="mt-4 text-base leading-relaxed text-white/65">If you cannot access the app, email <a className="font-semibold text-kelo-100 underline underline-offset-4" href="mailto:hello@kelo-care.com?subject=Delete%20my%20Kelo%20account">hello@kelo-care.com</a> from the email address on your Kelo account. Use the subject line <strong className="font-semibold text-white">“Delete my Kelo account”</strong>.</p>
-            <p className="mt-4 text-sm leading-relaxed text-white/45">For your safety, do not include passwords or care details in your email. We may need to verify that you own the account before we process the request.</p>
-          </LivingCard>
-
-          <LivingCard className="p-6 sm:p-9">
-            <p className="text-xs font-semibold uppercase tracking-[.22em] text-kelo-200">What is deleted</p>
-            <h2 className="mt-3 text-2xl font-semibold tracking-tight text-white sm:text-3xl">Your access and personal information</h2>
-            <div className="mt-5 space-y-4 text-base leading-relaxed text-white/65">
-              <p>Deleting your account removes your login, personal profile, and profile photo.</p>
-              <p>Care data that you independently own is permanently deleted.</p>
-              <p>When an agency is required to retain completed visit records, those records may remain de-identified as <strong className="font-semibold text-white">“Former caregiver”</strong>. Your personal access to them is removed.</p>
-            </div>
-          </LivingCard>
-        </div>
+      <section className="rd-shell rd-steps-doc">
+        <article className="rd-card-doc">
+          <span className="rd-step-n">01</span>
+          <h2>Delete it in the app</h2>
+          <p>
+            Open Kelo Care, go to <strong>Profile</strong>, choose <strong>Delete account</strong>, and follow the
+            confirmation steps. Caregivers and client/family users can confirm deletion there. Team leaders can submit a
+            request in the app; agency ownership and shared records must be reviewed before their account is removed.
+          </p>
+        </article>
+        <article className="rd-card-doc">
+          <span className="rd-step-n">02</span>
+          <h2>Cannot access the app?</h2>
+          <p>
+            Email <a href={MAIL}>hello@kelo-care.com</a> from the address used for your Kelo account with the subject
+            “Delete my Kelo account.” We will verify the request before removing the account. Do not include passwords
+            or private care details.
+          </p>
+          <a className="rd-btn rd-btn-primary" href={MAIL}>Request account deletion <span aria-hidden="true">→</span></a>
+        </article>
+        <article className="rd-card-doc">
+          <span className="rd-step-n">03</span>
+          <h2>What deletion means</h2>
+          <p>
+            Your login, personal profile, and profile photo are removed when deletion is completed. A caregiver&apos;s
+            independently owned care data is permanently deleted. Client/family account deletion ends access to shared
+            care records, which remain with their caregiver or agency. If you worked through an agency, records it must
+            retain, such as completed visit history, may remain in a de-identified form labelled “Former caregiver.”
+            Future assigned work must be covered by the agency.
+          </p>
+        </article>
+        <p className="rd-doc-back"><Link href="/">← Back to Kelo Care</Link></p>
       </section>
-      <SiteFooter />
-    </CareCanvas>
+    </SitePage>
   );
 }

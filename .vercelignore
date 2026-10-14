@@ -1,7 +1,6 @@
+.next/
+node_modules/
+dist/
+out/
 *.tar.gz
-/*.jpg
-/*.png
-/*.stl
-.open-next/
-.open-next-build/
-tmp/
+.env*.local

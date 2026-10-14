@@ -1,81 +1,19 @@
-import type { Metadata, Viewport } from "next";
-
-import { PageTransition } from "@/components/page-transition";
-import { SiteHeader } from "@/components/site-header";
-
+import type { Metadata } from "next";
+import { Host_Grotesk, Inter } from "next/font/google";
 import "./globals.css";
 
+const host = Host_Grotesk({ subsets: ["latin"], variable: "--font-host" });
+const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
+
 export const metadata: Metadata = {
-  metadataBase: new URL("https://kelocare.com"),
-  title: {
-    default: "Kelo Care: Care that everyone can see",
-    template: "%s · Kelo Care",
-  },
-  description:
-    "Kelo Care keeps caregivers, agencies, and families working from the same picture: visit timers, care notes, and scheduling in one app. $59/year or $7/month per caregiver, with a 14-day free trial.",
-  openGraph: {
-    title: "Kelo Care: Care that everyone can see",
-    description:
-      "Visit timers, care notes, and scheduling for home care teams. $59/year or $7/month per caregiver, with a 14-day free trial.",
-    type: "website",
-    images: [
-      {
-        url: "/og.png",
-        width: 1731,
-        height: 909,
-        alt: "Kelo Care: Thread of Care",
-      },
-    ],
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "Kelo Care: Care that everyone can see",
-    description:
-      "Visit timers, care notes, and scheduling for home care teams.",
-    images: ["/og.png"],
-  },
+  metadataBase: new URL("https://kelo-care.com"),
+  title: "Kelo Care | Care, coordinated.",
+  description: "Kelo Care brings clients, routines, medications, visits, and handoffs into one coordinated mobile app for caregivers.",
+  icons: { icon: "/images/kelo-care-logo.png", apple: "/images/kelo-care-logo.png" },
+  openGraph: { title: "Kelo Care | Care, coordinated.", description: "One calm place for the people, tasks, visits, and handoffs behind everyday care.", images: [{ url: "/og-kelo-care.png", width: 1792, height: 936, alt: "Kelo Care mobile app preview" }] },
+  twitter: { card: "summary_large_image", title: "Kelo Care | Care, coordinated.", description: "One calm place for the people, tasks, visits, and handoffs behind everyday care.", images: ["/og-kelo-care.png"] },
 };
 
-export const viewport: Viewport = {
-  themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
-    { media: "(prefers-color-scheme: dark)", color: "#100d29" },
-  ],
-  colorScheme: "dark light",
-};
-
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  return (
-    <html lang="en" suppressHydrationWarning>
-      <head>
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `(function(){try{var saved=localStorage.getItem('kelo-theme');var theme=saved==='light'||saved==='dark'?saved:(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.dataset.theme=theme;document.documentElement.style.colorScheme=theme}catch(e){document.documentElement.dataset.theme='dark'}})()`,
-          }}
-        />
-      </head>
-      <body className="min-h-screen bg-ink-950 font-sans">
-        <a
-          href="#main"
-          className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[60] focus:rounded-full focus:bg-kelo-600 focus:px-5 focus:py-3 focus:text-sm focus:font-semibold focus:text-white"
-        >
-          Skip to content
-        </a>
-
-        {/* Outside PageTransition: see the note in site-header.tsx. */}
-        <SiteHeader />
-
-        <main id="main">
-          <PageTransition>{children}</PageTransition>
-        </main>
-        <footer className="site-attribution relative z-10 border-t border-white/10 bg-ink-950 px-5 py-5 text-center text-sm text-white/60">
-          Powered by <span className="font-semibold text-white/80">Redmoose AI</span>
-        </footer>
-      </body>
-    </html>
-  );
+export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+  return <html lang="en" className={`${host.variable} ${inter.variable}`} suppressHydrationWarning><head><script dangerouslySetInnerHTML={{ __html: `(function(){try{var saved=localStorage.getItem('template-theme');var theme=saved==='light'||saved==='dark'?saved:'light';document.documentElement.dataset.theme=theme;document.documentElement.style.colorScheme=theme}catch(e){document.documentElement.dataset.theme='light'}})()` }} /></head><body>{children}</body></html>;
 }

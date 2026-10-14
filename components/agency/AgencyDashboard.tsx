@@ -1,0 +1,302 @@
+"use client";
+
+import Link from "next/link";
+import Image from "next/image";
+import { FormEvent, KeyboardEvent, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
+import type { WeeklyReport } from "../../lib/care-report-pdf";
+import { CareCanvas, CtaButton, LivingCard, cn } from "./ui";
+import { supabase } from "../../lib/supabase";
+
+type View = "overview" | "team" | "clients" | "schedule" | "care" | "reports";
+type Caregiver = { id: string; name: string; email: string; assigned_client_count: number };
+type Client = { id: string; name: string; notes: string };
+type Visit = { id: string; client_id: string; caregiver_id: string | null; date: string; start_time: string; end_time: string; actual_start?: string | null; actual_end?: string | null; status: "scheduled" | "in_progress" | "completed" | "missed" };
+type CareItem = { id?: string; client_id: string; item_type: "medication" | "routine"; title: string; dosage: string; instruction: string; scheduled_time: string; weekdays: number[] };
+type TaskInstance = { id: string; client_id: string; due_date: string; item_type: "medication" | "routine"; title_snapshot: string; is_skipped: boolean };
+type TaskLog = { client_id: string; status: "pending" | "done" | "missed"; task_instance_id: string | null; completed_by: string | null };
+type CareNote = { client_id: string; author_id: string; text: string; created_at: string };
+type SelectOption = { value: string; label: string; description?: string };
+type Workspace = { leaderName: string; agencyName: string; caregivers: Caregiver[]; clients: Client[]; visits: Visit[]; assignments: { client_id: string; caregiver_id: string }[]; careItems: CareItem[]; taskInstances: TaskInstance[]; taskLogs: TaskLog[]; notes: CareNote[]; reportsReady: boolean };
+const NAV: { id: View; label: string }[] = [{ id: "overview", label: "Overview" }, { id: "team", label: "Care team" }, { id: "clients", label: "Clients" }, { id: "schedule", label: "Schedule" }, { id: "care", label: "Care plans" }, { id: "reports", label: "Reports" }];
+const DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+const TIME_OPTIONS: SelectOption[] = Array.from({ length: 48 }, (_, index) => { const hour = Math.floor(index / 2); const minute = index % 2 ? 30 : 0; const value = `${String(hour).padStart(2, "0")}:${String(minute).padStart(2, "0")}`; return { value, label: new Date(2000, 0, 1, hour, minute).toLocaleTimeString(undefined, { hour: "numeric", minute: "2-digit" }) }; });
+const field = "min-w-0 w-full rounded-2xl border border-white/12 bg-white/[.07] px-4 py-3 text-sm text-white shadow-[inset_0_1px_0_rgba(255,255,255,.06),0_10px_24px_-22px_rgba(0,0,0,.85)] outline-none transition-[border-color,box-shadow,background-color] duration-200 placeholder:text-white/35 hover:border-kelo-300/45 hover:bg-white/[.09] focus:border-kelo-300 focus:bg-white/[.1] focus:ring-4 focus:ring-kelo-500/15 disabled:cursor-not-allowed disabled:opacity-45";
+const fieldLabel = "mb-2 flex flex-wrap items-center gap-2 text-sm font-semibold text-white/78";
+const fieldHint = "mt-1.5 text-xs leading-relaxed text-white/42";
+
+export function AgencyDashboard() {
+  const router = useRouter(); const [view, setView] = useState<View>("overview"); const [workspace, setWorkspace] = useState<Workspace | null>(null); const [message, setMessage] = useState("Loading your agency workspace…");
+  const requestVersion = useRef(0);
+  const activeView = useRef(view);
+  activeView.current = view;
+  const refresh = useCallback(async (includeReports = activeView.current === "reports") => {
+    const version = ++requestVersion.current;
+    const leaveWorkspace = async () => {
+      if (version !== requestVersion.current) return;
+      setWorkspace(null);
+      setMessage("Your agency session has ended. Please sign in again.");
+      await supabase.auth.signOut({ scope: "local" });
+      router.replace("/for-agencies");
+    };
+    try {
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    if (authError && (authError.name === "AuthRetryableFetchError" || authError.status === 429 || (authError.status || 0) >= 500)) throw authError;
+    if (!user || authError) return await leaveWorkspace();
+    const { data: profile, error: profileError } = await supabase.from("profiles").select("name, role, agency_id").eq("id", user.id).maybeSingle();
+    if (profileError) throw profileError;
+    if (!profile?.agency_id || profile.role !== "team_leader") return await leaveWorkspace();
+    const { data: agency, error: agencyError } = await supabase.from("agencies").select("name, leader_id").eq("id", profile.agency_id).maybeSingle();
+    if (agencyError) throw agencyError;
+    if (!agency || agency.leader_id !== user.id) return await leaveWorkspace();
+    // Report history is only needed when the leader opens Reports. Start those
+    // requests alongside the core data so that view still loads in one round.
+    const reportPromise = includeReports ? Promise.all([supabase.from("scheduled_task_instances").select("id, client_id, due_date, item_type, title_snapshot, is_skipped").order("due_date"), supabase.from("task_logs").select("client_id, status, task_instance_id, completed_by"), supabase.from("handoff_notes").select("client_id, author_id, text, created_at").order("created_at", { ascending: false })]) : null;
+    const [team, clients, visits, assignments, careItems] = await Promise.all([supabase.rpc("get_agency_caregivers"), supabase.from("clients").select("id, name, notes").eq("agency_id", profile.agency_id).order("created_at"), supabase.from("visits").select("id, client_id, caregiver_id, date, start_time, end_time, actual_start, actual_end, status").order("date").order("start_time"), supabase.rpc("get_client_caregiver_assignments"), supabase.from("care_schedules").select("id, client_id, item_type, title_snapshot, dosage_snapshot, instruction_snapshot, scheduled_time, weekdays").eq("active", true).order("scheduled_time")]);
+    const reportResults = reportPromise ? await reportPromise : null;
+    const loadError = [...[team, clients, visits, assignments, careItems], ...(reportResults || [])].find((result) => result.error)?.error;
+    if (loadError) throw loadError;
+    if (version !== requestVersion.current) return;
+    const plan = (careItems.data || []).map((item) => ({ id: item.id, client_id: item.client_id, item_type: item.item_type as CareItem["item_type"], title: item.title_snapshot, dosage: item.dosage_snapshot || "", instruction: item.instruction_snapshot || "", scheduled_time: item.scheduled_time, weekdays: item.weekdays || [] })) as CareItem[];
+    setWorkspace((previous) => ({ leaderName: profile.name || user.email?.split("@")[0] || "there", agencyName: agency.name, caregivers: (team.data || []) as Caregiver[], clients: (clients.data || []) as Client[], visits: (visits.data || []) as Visit[], assignments: (assignments.data || []) as { client_id: string; caregiver_id: string }[], careItems: plan, taskInstances: reportResults ? (reportResults[0].data || []) as TaskInstance[] : previous?.taskInstances || [], taskLogs: reportResults ? (reportResults[1].data || []) as TaskLog[] : previous?.taskLogs || [], notes: reportResults ? (reportResults[2].data || []) as CareNote[] : previous?.notes || [], reportsReady: Boolean(reportResults || previous?.reportsReady) })); setMessage("");
+    } catch {
+      if (version !== requestVersion.current) return;
+      setWorkspace(null);
+      setMessage("We couldn't verify the latest agency data. Check your connection and refresh to try again.");
+    }
+  }, [router]);
+  useEffect(() => {
+    void refresh();
+    let refreshTimer: number | undefined;
+    const scheduleRefresh = () => {
+      window.clearTimeout(refreshTimer);
+      refreshTimer = window.setTimeout(() => void refresh(), 300);
+    };
+    const liveChannel = supabase.channel("agency-dashboard-live")
+      .on("postgres_changes", { event: "*", schema: "public", table: "clients" }, scheduleRefresh)
+      .on("postgres_changes", { event: "*", schema: "public", table: "visits" }, scheduleRefresh)
+      .on("postgres_changes", { event: "*", schema: "public", table: "caregiver_clients" }, scheduleRefresh)
+      .on("postgres_changes", { event: "*", schema: "public", table: "care_schedules" }, scheduleRefresh)
+      .on("postgres_changes", { event: "*", schema: "public", table: "scheduled_task_instances" }, scheduleRefresh)
+      .on("postgres_changes", { event: "*", schema: "public", table: "task_logs" }, scheduleRefresh)
+      .on("postgres_changes", { event: "*", schema: "public", table: "handoff_notes" }, scheduleRefresh)
+      .on("postgres_changes", { event: "*", schema: "public", table: "profiles" }, scheduleRefresh)
+      .on("postgres_changes", { event: "*", schema: "public", table: "caregiver_memberships" }, scheduleRefresh)
+      .on("postgres_changes", { event: "*", schema: "public", table: "agencies" }, scheduleRefresh)
+      .subscribe();
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
+      if (event === "SIGNED_OUT") {
+        requestVersion.current += 1;
+        setWorkspace(null);
+        router.replace("/for-agencies");
+      }
+    });
+    const onVisible = () => { if (document.visibilityState === "visible") scheduleRefresh(); };
+    window.addEventListener("focus", scheduleRefresh);
+    window.addEventListener("online", scheduleRefresh);
+    document.addEventListener("visibilitychange", onVisible);
+    const interval = window.setInterval(() => {
+      if (document.visibilityState === "visible") void refresh();
+    }, 30_000);
+    return () => { requestVersion.current += 1; subscription.unsubscribe(); window.removeEventListener("focus", scheduleRefresh); window.removeEventListener("online", scheduleRefresh); document.removeEventListener("visibilitychange", onVisible); window.clearTimeout(refreshTimer); window.clearInterval(interval); void supabase.removeChannel(liveChannel); };
+  }, [refresh, router]);
+  useEffect(() => { if (view === "reports") void refresh(true); }, [view, refresh]);
+  const heading = NAV.find((x) => x.id === view)?.label || "Overview";
+  return <CareCanvas variant="agency"><section className="relative min-h-screen px-4 pb-10 pt-24 sm:px-6 sm:pt-28"><div className="mx-auto max-w-7xl overflow-hidden rounded-[2rem] border border-white/12 bg-[#090d24]/65 shadow-[0_30px_90px_-45px_rgba(0,0,0,.95)] backdrop-blur-xl"><div className="flex min-h-[720px]"><aside className="hidden w-60 shrink-0 border-r border-white/10 bg-white/[.035] p-5 lg:block"><Link href="/for-agencies" className="flex items-center gap-3 rounded-2xl px-3 py-3 text-white"><span className="relative grid h-9 w-9 shrink-0 place-items-center overflow-hidden rounded-xl border border-white/15 bg-white shadow-[0_8px_18px_-10px_rgba(0,0,0,.7)]"><Image src="/images/app/kelo-wordmark.png" alt="Kelo Care" width={733} height={343} className="h-auto w-[72%]" priority /></span><span className="font-semibold">Kelo Care</span></Link><p className="mt-8 px-3 text-[10px] font-bold uppercase tracking-[.2em] text-white/30">Agency workspace</p><nav className="mt-3 space-y-1">{NAV.map((x) => <button key={x.id} onClick={() => setView(x.id)} className={cn("w-full rounded-2xl px-3 py-3 text-left text-sm font-medium", view === x.id ? "bg-kelo-500/16 text-white ring-1 ring-kelo-300/18" : "text-white/52 hover:bg-white/[.055] hover:text-white")}>{x.label}</button>)}</nav></aside><div className="min-w-0 flex-1 p-5 sm:p-7 lg:p-9"><header className="flex flex-wrap items-center justify-between gap-4 border-b border-white/10 pb-6"><div><p className="text-xs font-semibold uppercase tracking-[.24em] text-kelo-200">{heading}</p><h1 className="mt-2 text-3xl font-medium tracking-[-.045em] text-white">{view === "overview" ? `Welcome back, ${workspace?.leaderName || "…"}.` : heading}</h1></div><button onClick={() => { void supabase.auth.signOut().then(() => router.replace("/for-agencies")); }} className="rounded-full border border-white/12 px-3 py-2 text-sm text-white/65 hover:bg-white/[.06]">Sign out</button></header><div className="mt-5 flex gap-2 overflow-x-auto lg:hidden">{NAV.map((x) => <button key={x.id} onClick={() => setView(x.id)} className={cn("whitespace-nowrap rounded-full px-3 py-2 text-sm", view === x.id ? "bg-kelo-500 text-white" : "bg-white/[.06] text-white/55")}>{x.label}</button>)}</div>{message && <p role="status" className="mt-5 rounded-2xl border border-kelo-300/25 bg-kelo-500/12 px-4 py-3 text-sm text-kelo-100">{message}</p>}{workspace && <main className="mt-7"><AgencyWorkspaceView view={view} workspace={workspace} refresh={refresh} /></main>}</div></div></div></section></CareCanvas>;
+}
+
+export function AgencyWorkspaceView({ view, workspace, refresh }: { view: View; workspace: Workspace; refresh: () => Promise<void> }) { if (view === "team") return <Team workspace={workspace} refresh={refresh} />; if (view === "clients") return <Clients workspace={workspace} refresh={refresh} />; if (view === "schedule") return <Schedule workspace={workspace} refresh={refresh} />; if (view === "care") return <CarePlans workspace={workspace} refresh={refresh} />; if (view === "reports") return workspace.reportsReady ? <Reports workspace={workspace} /> : <p role="status" className="text-sm text-white/60">Loading reports…</p>; const today = workspace.visits.filter((v) => v.date === iso(new Date())); return <><div className="grid gap-4 sm:grid-cols-3">{[[workspace.caregivers.length, "Active caregivers"], [today.length, "Visits today"], [today.filter((v) => !v.caregiver_id).length, "Needs coverage"]].map(([n, l]) => <LivingCard key={String(l)} className="p-5"><p className="text-4xl font-medium text-white">{n}</p><p className="mt-3 font-semibold text-white">{l}</p></LivingCard>)}</div><div className="mt-5"><Appointments workspace={workspace} /></div></>; }
+function Team({ workspace, refresh }: { workspace: Workspace; refresh: () => Promise<void> }) { const [email, setEmail] = useState(""); const [notice, setNotice] = useState(""); const [busy, setBusy] = useState(false); const invite = async (e: FormEvent) => { e.preventDefault(); setBusy(true); const { error } = await supabase.rpc("create_caregiver_invite", { invitee_email: email.trim() }); setNotice(error ? error.message : "Invitation created. The caregiver can accept it securely in Kelo."); if (!error) { setEmail(""); await refresh(); } setBusy(false); }; return <LivingCard className="overflow-hidden p-0"><div className="flex flex-wrap gap-5 p-5"><div className="min-w-[220px] flex-1"><h2 className="font-semibold text-white">Caregiver roster</h2><p className="mt-1 text-sm text-white/45">Invite caregivers to their own Kelo account, then assign clients and visits.</p></div><form onSubmit={invite} className="flex flex-1 flex-wrap gap-2 sm:justify-end"><input required type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="caregiver@email.com" className={field + " min-w-[210px]"} /><CtaButton type="submit" size="md" disabled={busy}>{busy ? "Sending…" : "Invite caregiver"}</CtaButton></form>{notice && <p className="w-full text-sm text-kelo-100">{notice}</p>}</div><div className="divide-y divide-white/[.07]">{workspace.caregivers.length ? workspace.caregivers.map((c) => <div key={c.id} className="flex flex-wrap justify-between gap-2 p-5"><div><p className="font-semibold text-white">{c.name || "Unnamed caregiver"}</p><p className="text-sm text-white/48">{c.email}</p></div><p className="text-sm text-kelo-100">{c.assigned_client_count} assigned clients</p></div>) : <p className="p-5 text-sm text-white/50">No caregivers have joined this agency yet.</p>}</div></LivingCard>; }
+function Clients({ workspace, refresh }: { workspace: Workspace; refresh: () => Promise<void> }) { const [name, setName] = useState(""); const [notes, setNotes] = useState(""); const [caregiver, setCaregiver] = useState(""); const [notice, setNotice] = useState(""); const [busy, setBusy] = useState(false); const add = async (e: FormEvent) => { e.preventDefault(); setBusy(true); const { data, error } = await supabase.rpc("create_client", { client_name: name.trim(), client_notes: notes.trim(), client_scope: "agency" }); let detail = error?.message || "Client created and ready for scheduling."; if (!error && caregiver && data?.id) { const assignment = await supabase.from("caregiver_clients").insert({ client_id: data.id, caregiver_id: caregiver }); if (assignment.error) detail = `Client created, but assignment needs attention: ${assignment.error.message}`; } setNotice(detail); if (!error) { setName(""); setNotes(""); setCaregiver(""); await refresh(); } setBusy(false); }; return <div className="grid gap-5 xl:grid-cols-[.9fr_1.1fr]"><LivingCard className="overflow-visible p-6"><h2 className="text-xl font-semibold text-white">Add a client</h2><p className="mt-2 text-sm text-white/48">Save care details and choose a primary caregiver when ready.</p><form onSubmit={add} className="mt-6 space-y-3"><input required value={name} onChange={(e) => setName(e.target.value)} placeholder="Client full name" className={field} /><textarea value={notes} onChange={(e) => setNotes(e.target.value)} placeholder="Care notes, preferences, or relevant details" className={field + " min-h-28 resize-y"} /><ModernSelect value={caregiver} onChange={setCaregiver} placeholder="Assign a caregiver later" options={[{ value: "", label: "Assign a caregiver later" }, ...workspace.caregivers.map((c) => ({ value: c.id, label: c.name || c.email, description: c.email }))]} /><CtaButton type="submit" size="md" disabled={busy}>{busy ? "Adding…" : "Add client"}</CtaButton></form>{notice && <p className="mt-4 text-sm text-kelo-100">{notice}</p>}</LivingCard><LivingCard className="overflow-hidden p-0"><div className="p-5"><h2 className="font-semibold text-white">Clients</h2><p className="mt-1 text-sm text-white/45">Shared live with the Kelo app.</p></div><div className="divide-y divide-white/[.07]">{workspace.clients.length ? workspace.clients.map((c) => <div key={c.id} className="p-5"><p className="font-semibold text-white">{c.name}</p><p className="mt-1 text-sm text-white/48">{c.notes || "No care notes added yet."}</p><p className="mt-3 text-xs text-kelo-100">Caregiver: {assigned(c.id, workspace).join(", ") || "Unassigned"}</p></div>) : <p className="p-5 text-sm text-white/50">No agency clients yet.</p>}</div></LivingCard></div>; }
+function Schedule({ workspace, refresh }: { workspace: Workspace; refresh: () => Promise<void> }) {
+  const monday = mondayOf(new Date());
+  const dates = useMemo(() => DAYS.map((_, i) => iso(addDays(monday, i))), [monday]);
+  const [client, setClient] = useClientSelection(workspace.clients);
+  const [caregiver, setCaregiver] = useState("");
+  const [picked, setPicked] = useState([0]);
+  const [start, setStart] = useState("09:00");
+  const [end, setEnd] = useState("10:00");
+  const [notice, setNotice] = useState("");
+  const [busy, setBusy] = useState(false);
+  const create = async (event: FormEvent) => { event.preventDefault(); setBusy(true); const { error } = await supabase.rpc("create_visits", { target_client_id: client, visit_dates: picked.map((day) => dates[day]), visit_start_time: start, visit_end_time: end, assigned_caregiver_id: caregiver || null }); setNotice(error ? error.message : `${picked.length} visit${picked.length === 1 ? "" : "s"} scheduled for this week.`); if (!error) await refresh(); setBusy(false); };
+  const copy = async () => { const source = workspace.visits.filter((visit) => visit.date >= dates[0] && visit.date <= dates[6]); if (!source.length) return setNotice("There are no visits to copy from this week."); setBusy(true); const results = await Promise.all(source.map((visit) => supabase.rpc("create_visits", { target_client_id: visit.client_id, visit_dates: [iso(addDays(new Date(`${visit.date}T12:00:00`), 7))], visit_start_time: visit.start_time, visit_end_time: visit.end_time, assigned_caregiver_id: visit.caregiver_id }))); const failed = results.find((result) => result.error); setNotice(failed?.error?.message || `${source.length} visits copied to next week.`); if (!failed) await refresh(); setBusy(false); };
+  return <div className="grid gap-5 xl:grid-cols-[.95fr_1.05fr]">
+    <LivingCard className="overflow-visible p-6 sm:p-7">
+      <div className="flex flex-wrap items-start justify-between gap-4"><div><p className="text-xs font-semibold uppercase tracking-[.18em] text-kelo-200">Plan the week</p><h2 className="mt-2 text-xl font-semibold text-white">Weekly schedule</h2><p className="mt-2 text-sm text-white/48">Set appointments for the week of {monday.toLocaleDateString(undefined, { month: "short", day: "numeric" })}.</p></div><button type="button" onClick={copy} disabled={busy} className="agency-action-secondary rounded-full border px-4 py-2.5 text-xs font-semibold text-white/80 disabled:cursor-not-allowed disabled:opacity-40">Copy this week <span aria-hidden="true">→</span></button></div>
+      <form onSubmit={create} className="mt-7 space-y-5">
+        <div><label htmlFor="schedule-client" className={fieldLabel}>Client</label><ModernSelect id="schedule-client" value={client} onChange={setClient} placeholder="Choose the client for this visit" options={workspace.clients.map((entry) => ({ value: entry.id, label: entry.name }))} /><p className={fieldHint}>The visit and its completed record will be saved to this client.</p></div>
+        <div><label htmlFor="schedule-caregiver" className={fieldLabel}>Caregiver <span className="font-normal text-white/38">Optional</span></label><ModernSelect id="schedule-caregiver" value={caregiver} onChange={setCaregiver} placeholder="Leave unassigned for now" options={workspace.caregivers.map((entry) => ({ value: entry.id, label: entry.name || entry.email, description: entry.email }))} /><p className={fieldHint}>You can leave coverage open and assign it later.</p></div>
+        <div className="grid gap-4 sm:grid-cols-2"><div><label htmlFor="schedule-start" className={fieldLabel}>Starts</label><ModernSelect id="schedule-start" value={start} onChange={setStart} placeholder="Choose a start time" options={TIME_OPTIONS} /></div><div><label htmlFor="schedule-end" className={fieldLabel}>Ends</label><ModernSelect id="schedule-end" value={end} onChange={setEnd} placeholder="Choose an end time" options={TIME_OPTIONS} /></div></div>
+        <div><p className={fieldLabel}>Visit days</p><div className="grid grid-cols-4 gap-1.5 min-[400px]:grid-cols-7">{DAYS.map((day, index) => <button key={day} type="button" aria-pressed={picked.includes(index)} onClick={() => setPicked((current) => current.includes(index) ? current.filter((value) => value !== index) : [...current, index])} className={cn("rounded-2xl border px-1 py-3 text-xs font-semibold transition", picked.includes(index) ? "agency-day-selected border-kelo-300/50 bg-kelo-500 text-white shadow-[0_10px_20px_-14px_rgba(69,118,255,.9)]" : "border-transparent bg-white/[.045] text-white/52 hover:border-white/12 hover:bg-white/[.08]")}>{day}<span className="mt-1 block text-[10px] opacity-70">{new Date(`${dates[index]}T12:00:00`).getDate()}</span></button>)}</div><p className={fieldHint}>Choose every day this visit should repeat during this week.</p></div>
+        <CtaButton type="submit" size="md" disabled={busy || !client || !picked.length}>{busy ? "Saving…" : "Schedule visits"}</CtaButton>
+      </form>{notice && <p role="status" className="mt-5 rounded-2xl border border-kelo-300/20 bg-kelo-500/10 px-4 py-3 text-sm text-kelo-100">{notice}</p>}
+    </LivingCard>
+    <Appointments workspace={workspace} weekStart={dates[0]} weekEnd={dates[6]} />
+  </div>;
+}
+function CarePlans({ workspace, refresh }: { workspace: Workspace; refresh: () => Promise<void> }) {
+  const [clientId, setClientId] = useClientSelection(workspace.clients); const [items, setItems] = useState<CareItem[]>([]); const [kind, setKind] = useState<CareItem["item_type"]>("medication"); const [title, setTitle] = useState(""); const [dosage, setDosage] = useState(""); const [instruction, setInstruction] = useState(""); const [time, setTime] = useState("09:00"); const [days, setDays] = useState([1, 2, 3, 4, 5]); const [fromDay, setFromDay] = useState(1); const [toDay, setToDay] = useState(2); const [notice, setNotice] = useState(""); const [busy, setBusy] = useState(false);
+  const savedPlan = JSON.stringify(workspace.careItems.filter((item) => item.client_id === clientId));
+  useEffect(() => { setItems(JSON.parse(savedPlan) as CareItem[]); }, [clientId, savedPlan]);
+  const add = () => { if (!title.trim() || !days.length) return; setItems((current) => [...current, { client_id: clientId, item_type: kind, title: title.trim(), dosage: kind === "medication" ? dosage.trim() : "", instruction: instruction.trim(), scheduled_time: time, weekdays: days }]); setTitle(""); setDosage(""); setInstruction(""); };
+  const copyDay = () => { const source = items.filter((item) => item.weekdays.includes(fromDay)); if (!source.length) return setNotice("There are no tasks on that source day yet."); setItems((current) => current.map((item) => item.weekdays.includes(fromDay) && !item.weekdays.includes(toDay) ? { ...item, weekdays: [...item.weekdays, toDay].sort() } : item)); setNotice("That day is now copied into the weekly automation."); };
+  const publish = async () => { if (!clientId) return; setBusy(true); const payload = items.map(({ item_type, title: itemTitle, dosage: itemDosage, instruction: itemInstruction, scheduled_time, weekdays }) => ({ item_type, title: itemTitle, dosage: itemDosage, instruction: itemInstruction, scheduled_time, weekdays })); const { data, error } = await supabase.rpc("publish_weekly_care_plan", { p_client_id: clientId, p_items: payload, p_effective_from: iso(new Date()) }); setNotice(error ? error.message : `${data || payload.length} care tasks are now automated every week and synced to Kelo.`); if (!error) await refresh(); setBusy(false); };
+  return <div className="grid gap-5 xl:grid-cols-[.9fr_1.1fr]">
+    <LivingCard className="overflow-visible p-6 sm:p-7"><p className="text-xs font-semibold uppercase tracking-[.2em] text-kelo-200">Automation first</p><h2 className="mt-2 text-xl font-semibold text-white">Weekly care plan</h2><p className="mt-2 text-sm leading-relaxed text-white/48">Build the weekly pattern once. Kelo creates the daily medication and routine tasks automatically.</p>
+      <div className="mt-7 space-y-5"><div><label htmlFor="plan-client" className={fieldLabel}>Client</label><ModernSelect id="plan-client" value={clientId} onChange={setClientId} placeholder="Choose the client this plan is for" options={workspace.clients.map((entry) => ({ value: entry.id, label: entry.name }))} /><p className={fieldHint}>Choose the person whose daily plan you are building.</p></div><div className="grid gap-4 sm:grid-cols-2"><div><label htmlFor="plan-kind" className={fieldLabel}>Care item</label><ModernSelect id="plan-kind" value={kind} onChange={(value) => setKind(value as CareItem["item_type"])} placeholder="Choose a care item" options={[{ value: "medication", label: "Medication", description: "Doses and instructions" }, { value: "routine", label: "Routine", description: "Daily care activity" }]} /></div><div><label htmlFor="plan-time" className={fieldLabel}>Scheduled time</label><ModernSelect id="plan-time" value={time} onChange={setTime} placeholder="Choose a time" options={TIME_OPTIONS} /></div></div><div><label htmlFor="plan-title" className={fieldLabel}>{kind === "medication" ? "Medication name" : "Routine name"}</label><input id="plan-title" value={title} onChange={(event) => setTitle(event.target.value)} placeholder={kind === "medication" ? "e.g. Lisinopril" : "e.g. Morning walk"} className={field} /><p className={fieldHint}>Use the name caregivers should see in their daily checklist.</p></div><div><label htmlFor="plan-dosage" className={fieldLabel}>Dose or amount <span className="font-normal text-white/38">Medication only</span></label><input id="plan-dosage" value={dosage} onChange={(event) => setDosage(event.target.value)} placeholder="e.g. 10 mg or 2 tablets" disabled={kind !== "medication"} className={field} /></div><div><label htmlFor="plan-instructions" className={fieldLabel}>Caregiver instructions <span className="font-normal text-white/38">Optional</span></label><input id="plan-instructions" value={instruction} onChange={(event) => setInstruction(event.target.value)} placeholder="e.g. Take with breakfast, record any concerns" className={field} /></div><div><p className={fieldLabel}>Repeats on</p><div className="grid grid-cols-4 gap-1.5 min-[400px]:grid-cols-7">{DAYS.map((day, index) => { const value = index === 6 ? 0 : index + 1; return <button key={day} type="button" aria-pressed={days.includes(value)} onClick={() => setDays((current) => current.includes(value) ? current.filter((entry) => entry !== value) : [...current, value])} className={cn("rounded-2xl px-1 py-3 text-xs font-semibold transition", days.includes(value) ? "agency-day-selected bg-kelo-500 text-white shadow-[0_10px_20px_-14px_rgba(69,118,255,.9)]" : "bg-white/[.05] text-white/50 hover:bg-white/[.09]")}>{day}</button>; })}</div><p className={fieldHint}>Select the days when this care item should appear.</p></div><button type="button" onClick={add} disabled={!clientId || !title.trim() || !days.length} className="agency-action-primary heartbeat-button rounded-full px-4 py-2.5 text-sm font-semibold disabled:cursor-not-allowed disabled:opacity-40">Add to plan</button></div>
+      <div className="mt-8 border-t border-white/10 pt-6"><p className="text-xs font-semibold uppercase tracking-[.16em] text-white/42">Copy a day forward</p><p className="mt-2 text-sm text-white/48">Reuse an existing day’s routine without re-entering each task.</p><div className="mt-4 grid grid-cols-[1fr_auto_1fr] items-center gap-2"><ModernSelect value={String(fromDay)} onChange={(value) => setFromDay(Number(value))} placeholder="From day" options={DAYS.map((day, index) => ({ value: String(index === 6 ? 0 : index + 1), label: day }))} /><span className="text-white/45">→</span><ModernSelect value={String(toDay)} onChange={(value) => setToDay(Number(value))} placeholder="To day" options={DAYS.map((day, index) => ({ value: String(index === 6 ? 0 : index + 1), label: day }))} /></div><button type="button" onClick={copyDay} className="mt-4 text-sm font-semibold text-kelo-100 underline decoration-kelo-300/50 underline-offset-4">Copy day into plan</button></div>
+      <CtaButton type="button" onClick={publish} size="md" fullWidth disabled={busy || !clientId} className="mt-8">{busy ? "Publishing…" : "Publish automated care plan"}</CtaButton>{notice && <p role="status" className="mt-4 rounded-2xl border border-kelo-300/20 bg-kelo-500/10 px-4 py-3 text-sm text-kelo-100">{notice}</p>}
+    </LivingCard>
+    <LivingCard className="overflow-hidden p-0"><div className="flex items-center justify-between gap-3 p-6"><div><p className="text-xs font-semibold uppercase tracking-[.16em] text-kelo-200">Ready to publish</p><h2 className="mt-2 font-semibold text-white">Plan preview</h2><p className="mt-1 text-sm text-white/45">Repeats automatically every week. Completed history is preserved.</p></div><span className="rounded-full bg-kelo-500/15 px-3 py-1 text-xs font-semibold text-kelo-100">{items.length} tasks</span></div><div className="divide-y divide-white/[.07]">{items.length ? items.map((item, index) => <div key={`${item.id || item.title}-${index}`} className="flex flex-wrap items-start justify-between gap-4 p-5"><div className="min-w-0 flex-1 break-words"><p className="font-semibold text-white">{item.title}</p><p className="mt-1 text-sm text-white/48">{item.item_type === "medication" && item.dosage ? `${item.dosage} · ` : ""}{item.scheduled_time} · {item.weekdays.map(dayName).join(", ")}</p>{item.instruction && <p className="mt-2 text-xs text-kelo-100">{item.instruction}</p>}</div><button type="button" onClick={() => setItems((current) => current.filter((_, itemIndex) => itemIndex !== index))} className="rounded-full border border-white/12 px-3 py-1.5 text-xs text-white/55 transition hover:border-red-300/40 hover:text-red-200">Remove</button></div>) : <p className="p-6 text-sm text-white/50">Choose a client and add medications or routines to build this week’s automated plan.</p>}</div></LivingCard>
+  </div>;
+}
+function useClientSelection(clients: Client[]): [string, (id: string) => void] {
+  const [selected, setSelected] = useState(clients[0]?.id || "");
+  const current = clients.some((client) => client.id === selected) ? selected : clients[0]?.id || "";
+  useEffect(() => { if (selected !== current) setSelected(current); }, [selected, current]);
+  return [current, setSelected];
+}
+function Reports({ workspace }: { workspace: Workspace }) {
+  const currentMonday = mondayOf(new Date());
+  const [clientId, setClientId] = useClientSelection(workspace.clients);
+  const [weekStart, setWeekStart] = useState(iso(currentMonday));
+  const start = new Date(`${weekStart}T12:00:00`);
+  const end = addDays(start, 6);
+  const previousStart = addDays(start, -7);
+  const nextStart = addDays(start, 7);
+  const inWeek = (date: string, from = start) => date >= iso(from) && date <= iso(addDays(from, 6));
+  const clientVisits = workspace.visits.filter((visit) => visit.client_id === clientId && inWeek(visit.date));
+  const completedVisits = clientVisits.filter((visit) => visit.status === "completed");
+  const priorVisits = workspace.visits.filter((visit) => visit.client_id === clientId && inWeek(visit.date, previousStart));
+  const nextVisits = workspace.visits.filter((visit) => visit.client_id === clientId && inWeek(visit.date, nextStart));
+  const hours = clientVisits.reduce((total, visit) => total + visitHours(visit), 0);
+  const caregiverCounts = clientVisits.reduce<Record<string, number>>((counts, visit) => {
+    const name = caregiver(visit.caregiver_id, workspace);
+    counts[name] = (counts[name] || 0) + 1;
+    return counts;
+  }, {});
+  const tasks = workspace.taskInstances.filter((task) => task.client_id === clientId && inWeek(task.due_date) && !task.is_skipped);
+  const logs = new Map(workspace.taskLogs.filter((log) => log.client_id === clientId && log.task_instance_id).map((log) => [log.task_instance_id!, log]));
+  const taskSummary = (filter: (task: TaskInstance) => boolean) => {
+    const matching = tasks.filter(filter);
+    const done = matching.filter((task) => logs.get(task.id)?.status === "done").length;
+    const missed = matching.filter((task) => logs.get(task.id)?.status === "missed").length;
+    return { total: matching.length, done, missed };
+  };
+  const medications = taskSummary((task) => task.item_type === "medication");
+  const meals = taskSummary((task) => task.item_type === "routine" && /(meal|breakfast|lunch|dinner)/i.test(task.title_snapshot));
+  const activity = taskSummary((task) => task.item_type === "routine" && /(walk|activity|exercise|outside)/i.test(task.title_snapshot));
+  const notes = workspace.notes.filter((note) => note.client_id === clientId && inWeek(iso(new Date(note.created_at)))).slice(0, 4);
+  const exception = medications.missed ? `${medications.missed} medication dose${medications.missed === 1 ? " was" : "s were"} marked missed this week.` : meals.missed ? `${meals.missed} meal routine${meals.missed === 1 ? " was" : "s were"} marked missed this week.` : "No medication or routine exceptions were recorded this week.";
+  const visitComparison = clientVisits.length === priorVisits.length ? `same visits (${clientVisits.length})` : `${clientVisits.length} visits vs ${priorVisits.length}`;
+  const dateRange = `${start.toLocaleDateString(undefined, { month: "short", day: "numeric" })}–${end.toLocaleDateString(undefined, { day: "numeric" })}`;
+  const nextWeek = nextVisits.length ? `${nextVisits.length} visit${nextVisits.length === 1 ? "" : "s"}, ${Array.from(new Set(nextVisits.map((visit) => new Date(`${visit.date}T12:00:00`).toLocaleDateString(undefined, { weekday: "short" })))).join("–")}, ${Array.from(new Set(nextVisits.map((visit) => visit.start_time))).join(", ")}, ${Array.from(new Set(nextVisits.map((visit) => caregiver(visit.caregiver_id, workspace)))).join(", ")}` : "No visits scheduled yet.";
+  const complete = workspace.visits.filter((visit) => visit.status === "completed" && visit.client_id === clientId);
+  const summaryLine = `${clientVisits.length} visit${clientVisits.length === 1 ? "" : "s"} · ${formatHours(hours)} · ${Object.entries(caregiverCounts).map(([name, count]) => `${name} (${count})`).join(", ") || "No caregiver assigned"}`;
+  const medicationText = medications.total ? `${medications.done} of ${medications.total} doses given${medications.missed ? ` (${medications.missed} missed)` : ""}` : "No medication doses scheduled";
+  const mealText = meals.total ? `${meals.done} of ${meals.total} meal routine tasks completed${meals.missed ? ` (${meals.missed} missed)` : ""}` : "No meal routine activity recorded";
+  const activityText = activity.total ? `${activity.done} of ${activity.total} activity routine tasks completed${activity.missed ? ` (${activity.missed} missed)` : ""}` : "No activity routine recorded";
+  return <div className="space-y-5">
+    <LivingCard className="overflow-visible p-0">
+      <div className="border-b border-white/[.08] p-6">
+        <p className="text-xs font-semibold uppercase tracking-[.2em] text-kelo-200">Weekly care report</p>
+        <div className="mt-4 flex flex-wrap items-end justify-between gap-4">
+          <div>
+            <h2 className="text-2xl font-medium text-white">{client(clientId, workspace)} <span className="text-white/45">— week of {dateRange}</span></h2>
+            <p className="mt-2 text-sm text-white/55">A clear weekly snapshot from the care your team recorded in Kelo.</p>
+          </div>
+          <div className="flex flex-wrap items-center gap-2">
+            <button type="button" disabled={!clientId} onClick={() => weeklyPdf({ agencyName: workspace.agencyName, clientName: client(clientId, workspace), dateRange, summaryLine, exception, visits: `${completedVisits.length} of ${clientVisits.length} completed`, medications: medicationText, meals: mealText, activity: activityText, comparison: visitComparison, nextWeek, notes: notes.map((note) => ({ text: note.text, byline: `From ${caregiver(note.author_id, workspace)}, ${new Date(note.created_at).toLocaleDateString(undefined, { weekday: "short" })}` })) })} className="agency-action-primary heartbeat-button rounded-full px-3 py-2 text-xs font-semibold disabled:cursor-not-allowed disabled:opacity-40">Download weekly PDF</button>
+            <button type="button" onClick={() => setWeekStart(iso(previousStart))} className="agency-action-secondary rounded-full border px-3 py-2 text-xs font-semibold text-white/80">Previous</button>
+            <button type="button" onClick={() => setWeekStart(iso(currentMonday))} className="agency-action-secondary rounded-full border px-3 py-2 text-xs font-semibold text-white/80">This week</button>
+            <button type="button" onClick={() => setWeekStart(iso(nextStart))} className="agency-action-secondary rounded-full border px-3 py-2 text-xs font-semibold text-white/80">Next</button>
+          </div>
+        </div>
+        <ModernSelect className="mt-5 max-w-md" value={clientId} onChange={setClientId} placeholder="Choose client" options={workspace.clients.map((entry) => ({ value: entry.id, label: entry.name }))} />
+      </div>
+      {clientId ? <div className="p-6">
+        <p className="font-semibold text-white">{summaryLine}</p>
+        <div className="mt-5 rounded-2xl border border-kelo-300/25 bg-kelo-500/12 p-4"><p className="text-sm leading-relaxed text-kelo-50"><span className="font-semibold text-white">One thing to know:</span> {exception}</p></div>
+        <div className="mt-6 grid gap-3 sm:grid-cols-2"><ReportFact title="Visits" value={`${completedVisits.length} of ${clientVisits.length} completed`} /><ReportFact title="Medications" value={medicationText} /><ReportFact title="Meals" value={mealText} /><ReportFact title="Activity" value={activityText} /></div>
+        <div className="mt-6 border-t border-white/[.08] pt-5"><p className="text-sm leading-relaxed text-white/70"><span className="font-semibold text-white">Compared with last week:</span> {visitComparison}.</p><p className="mt-4 text-sm leading-relaxed text-white/70"><span className="font-semibold text-white">Next week:</span> {nextWeek}</p></div>
+      </div> : <p className="p-6 text-sm text-white/55">Add a client to begin viewing weekly reports.</p>}
+    </LivingCard>
+    <LivingCard className="overflow-hidden p-0"><div className="p-6"><p className="text-xs font-semibold uppercase tracking-[.2em] text-kelo-200">From the care team</p><h3 className="mt-2 text-xl font-semibold text-white">Caregiver notes</h3></div><div className="divide-y divide-white/[.07]">{notes.length ? notes.map((note) => <div key={`${note.created_at}-${note.author_id}`} className="p-5"><p className="text-sm leading-relaxed text-white/75">“{note.text}”</p><p className="mt-3 text-xs font-semibold text-kelo-100">From {caregiver(note.author_id, workspace)}, {new Date(note.created_at).toLocaleDateString(undefined, { weekday: "short" })}</p></div>) : <p className="p-6 text-sm text-white/50">No caregiver notes were recorded for this client during this week.</p>}</div></LivingCard>
+    <LivingCard className="overflow-hidden p-0"><div className="p-6"><p className="text-xs font-semibold uppercase tracking-[.2em] text-kelo-200">Completed care</p><h3 className="mt-2 text-xl font-semibold text-white">Session records</h3><p className="mt-2 text-sm text-white/48">Download a PDF for any individual completed caregiving session.</p></div><div className="divide-y divide-white/[.07]">{complete.length ? complete.map((visit) => <div key={visit.id} className="flex flex-wrap items-center justify-between gap-4 p-5"><div><p className="font-semibold text-white">{visit.date} · {visit.start_time}–{visit.end_time}</p><p className="mt-1 text-sm text-white/48">{caregiver(visit.caregiver_id, workspace)}</p></div><button type="button" onClick={() => pdf(visit, workspace)} className="agency-action-primary heartbeat-button rounded-full px-4 py-2 text-sm font-semibold">Download session PDF</button></div>) : <p className="p-6 text-sm text-white/50">Completed sessions will appear here once caregivers finish them in Kelo.</p>}</div></LivingCard>
+  </div>;
+}
+function ReportFact({ title, value }: { title: string; value: string }) { return <div className="rounded-2xl bg-white/[.055] p-4"><p className="text-xs font-semibold uppercase tracking-[.15em] text-white/42">{title}</p><p className="mt-2 text-sm leading-relaxed text-white/78">{value}</p></div>; }
+function ModernSelect({ id, value, options, onChange, placeholder, disabled = false, className }: { id?: string; value: string; options: SelectOption[]; onChange: (value: string) => void; placeholder: string; disabled?: boolean; className?: string }) {
+  const [open, setOpen] = useState(false);
+  const root = useRef<HTMLDivElement>(null);
+  const selected = options.find((option) => option.value === value);
+  const currentIndex = Math.max(0, options.findIndex((option) => option.value === value));
+
+  useEffect(() => {
+    const close = (event: PointerEvent) => { if (!root.current?.contains(event.target as Node)) setOpen(false); };
+    document.addEventListener("pointerdown", close);
+    return () => document.removeEventListener("pointerdown", close);
+  }, []);
+
+  const choose = (next: string) => { onChange(next); setOpen(false); };
+  const onKeyDown = (event: KeyboardEvent<HTMLButtonElement>) => {
+    if (event.key === "Escape") { setOpen(false); return; }
+    if (event.key === "Enter" || event.key === " ") { event.preventDefault(); setOpen((current) => !current); return; }
+    if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+      event.preventDefault();
+      if (!options.length) return;
+      choose(options[event.key === "ArrowDown" ? Math.min(options.length - 1, currentIndex + 1) : Math.max(0, currentIndex - 1)].value);
+    }
+  };
+
+  return <div ref={root} className={cn("agency-modern-select relative min-w-0 flex-1", className)}>
+    <button id={id} type="button" role="combobox" aria-haspopup="listbox" aria-expanded={open} aria-controls={id ? `${id}-options` : undefined} disabled={disabled} onClick={() => setOpen((current) => !current)} onKeyDown={onKeyDown} className={cn(field, "agency-modern-select-trigger flex min-h-12 items-center justify-between gap-3 text-left", open && "is-open border-kelo-300 bg-white/[.1] ring-4 ring-kelo-500/15")}>
+      <span className={cn("min-w-0 truncate", selected ? "text-white" : "text-white/38")}>{selected?.label || placeholder}</span>
+      <svg viewBox="0 0 20 20" className={cn("h-4 w-4 shrink-0 text-kelo-200 transition-transform duration-200", open && "rotate-180")} aria-hidden="true"><path d="m5.5 7.5 4.5 4.5 4.5-4.5" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" /></svg>
+    </button>
+    {open && <div id={id ? `${id}-options` : undefined} role="listbox" aria-label={placeholder} className="agency-modern-select-menu absolute z-50 mt-2 max-h-64 w-full overflow-y-auto rounded-2xl border p-1.5 shadow-[0_24px_50px_-22px_rgba(0,0,0,.9)] backdrop-blur-xl">
+      <div className="px-3 py-2 text-[10px] font-bold uppercase tracking-[.16em] text-white/35">Choose an option</div>
+      {options.map((option) => <button key={option.value || "empty"} type="button" role="option" aria-selected={option.value === value} onClick={() => choose(option.value)} className={cn("agency-modern-select-option flex w-full items-center justify-between gap-3 rounded-xl px-3 py-2.5 text-left text-sm transition", option.value === value && "is-selected")}>
+        <span className="min-w-0"><span className="block truncate font-medium">{option.label}</span>{option.description && <span className="mt-0.5 block truncate text-xs text-white/40">{option.description}</span>}</span>
+        {option.value === value && <svg viewBox="0 0 20 20" className="h-4 w-4 shrink-0 text-kelo-200" aria-hidden="true"><path d="m4.5 10.5 3.5 3.5 7.5-8" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>}
+      </button>)}
+    </div>}
+  </div>;
+}
+
+function Appointments({ workspace, weekStart, weekEnd }: { workspace: Workspace; weekStart?: string; weekEnd?: string }) {
+  const [dateFilter, setDateFilter] = useState<"all" | "today" | "upcoming" | "past">("all");
+  const [assignmentFilter, setAssignmentFilter] = useState<"all" | "assigned" | "unassigned">("all");
+  const [statusFilter, setStatusFilter] = useState<"all" | Visit["status"]>("all");
+  const today = iso(new Date());
+  const visits = workspace.visits.filter((visit) => {
+    if (weekStart && (visit.date < weekStart || visit.date > weekEnd!)) return false;
+    if (dateFilter === "today" && visit.date !== today) return false;
+    if (dateFilter === "upcoming" && visit.date < today) return false;
+    if (dateFilter === "past" && visit.date >= today) return false;
+    if (assignmentFilter === "assigned" && !visit.caregiver_id) return false;
+    if (assignmentFilter === "unassigned" && visit.caregiver_id) return false;
+    return statusFilter === "all" || visit.status === statusFilter;
+  }).sort((a, b) => `${b.date}T${b.start_time}`.localeCompare(`${a.date}T${a.start_time}`)).slice(0, 50);
+  const hasFilters = dateFilter !== "all" || assignmentFilter !== "all" || statusFilter !== "all";
+  const reset = () => { setDateFilter("all"); setAssignmentFilter("all"); setStatusFilter("all"); };
+  return <LivingCard className="overflow-visible p-0"><div className="border-b border-white/[.08] p-6"><div className="flex flex-wrap items-start justify-between gap-4"><div><p className="text-xs font-semibold uppercase tracking-[.18em] text-kelo-200">Latest first</p><h2 className="mt-2 text-xl font-semibold text-white">Appointment updates</h2><p className="mt-2 text-sm text-white/48">Newer visits appear first, so coverage changes and completed care are easy to spot.</p></div><span className="rounded-full border border-white/10 bg-white/[.04] px-3 py-1.5 text-xs font-semibold text-white/60">{visits.length} shown</span></div><div className="mt-5 grid gap-3 sm:grid-cols-3"><div><label htmlFor="appointment-date" className="sr-only">Filter by date</label><ModernSelect id="appointment-date" value={dateFilter} onChange={(value) => setDateFilter(value as typeof dateFilter)} placeholder="Any date" options={[{ value: "all", label: "Any date" }, { value: "today", label: "Today" }, { value: "upcoming", label: "Today and upcoming" }, { value: "past", label: "Past visits" }]} /></div><div><label htmlFor="appointment-assignment" className="sr-only">Filter by assignment</label><ModernSelect id="appointment-assignment" value={assignmentFilter} onChange={(value) => setAssignmentFilter(value as typeof assignmentFilter)} placeholder="All coverage" options={[{ value: "all", label: "All coverage" }, { value: "assigned", label: "Assigned" }, { value: "unassigned", label: "Unassigned" }]} /></div><div className="flex gap-2"><label htmlFor="appointment-status" className="sr-only">Filter by status</label><ModernSelect id="appointment-status" value={statusFilter} onChange={(value) => setStatusFilter(value as typeof statusFilter)} placeholder="All statuses" options={[{ value: "all", label: "All statuses" }, { value: "scheduled", label: "Scheduled" }, { value: "in_progress", label: "In progress" }, { value: "completed", label: "Completed" }, { value: "missed", label: "Missed" }]} />{hasFilters && <button type="button" onClick={reset} className="shrink-0 rounded-2xl border border-white/12 px-3 text-xs font-semibold text-white/60 transition hover:border-kelo-300/40 hover:text-white">Reset</button>}</div></div></div><div className="overflow-x-auto"><table className="w-full min-w-[700px] text-left text-sm"><thead className="border-b border-white/10 bg-white/[.025] text-xs uppercase tracking-[.14em] text-white/35"><tr><th className="px-6 py-3.5">Date</th><th className="px-6 py-3.5">Client</th><th className="px-6 py-3.5">Caregiver</th><th className="px-6 py-3.5">Status</th><th className="px-6 py-3.5 text-right">Time</th></tr></thead><tbody>{visits.length ? visits.map((visit) => <tr key={visit.id} className="border-b border-white/[.065] transition-colors hover:bg-white/[.035]"><td className="px-6 py-4 text-white/55">{new Date(`${visit.date}T12:00:00`).toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" })}</td><td className="px-6 py-4 font-medium text-white/82">{client(visit.client_id, workspace)}</td><td className="px-6 py-4"><span className={cn("inline-flex rounded-full px-2.5 py-1 text-xs font-medium", visit.caregiver_id ? "bg-kelo-500/12 text-kelo-100" : "bg-amber-400/10 text-amber-100")}>{visit.caregiver_id ? caregiver(visit.caregiver_id, workspace) : "Unassigned"}</span></td><td className="px-6 py-4"><StatusBadge status={visit.status} /></td><td className="px-6 py-4 text-right font-medium text-white/58">{visit.start_time} - {visit.end_time}</td></tr>) : <tr><td colSpan={5} className="px-6 py-10 text-center text-sm text-white/45">No appointments match these filters.</td></tr>}</tbody></table></div></LivingCard>;
+}
+function StatusBadge({ status }: { status: Visit["status"] }) { return <span className={cn("status-badge inline-flex rounded-full px-2.5 py-1 text-xs font-semibold capitalize", `status-${status.replace("_", "-")}`)}>{status.replace("_", " ")}</span>; }
+function client(id: string, w: Workspace) { return w.clients.find((c) => c.id === id)?.name || "Client"; }
+function caregiver(id: string | null, w: Workspace) { const c = w.caregivers.find((x) => x.id === id); return c ? c.name || c.email : id ? "Former caregiver" : "Unassigned"; }
+function assigned(id: string, w: Workspace) { return w.assignments.filter((a) => a.client_id === id).map((a) => caregiver(a.caregiver_id, w)); }
+function dayName(value: number) { return DAYS[value === 0 ? 6 : value - 1]; }
+function mondayOf(d: Date) { const r = new Date(d); r.setDate(r.getDate() - ((r.getDay() + 6) % 7)); return r; }
+function addDays(d: Date, n: number) { const r = new Date(d); r.setDate(r.getDate() + n); return r; }
+function iso(d: Date) { return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`; }
+function visitHours(visit: Visit) { const [startHour, startMinute] = visit.start_time.split(":").map(Number); const [endHour, endMinute] = visit.end_time.split(":").map(Number); return Math.max(0, (endHour * 60 + endMinute - startHour * 60 - startMinute) / 60); }
+function formatHours(hours: number) { return `${Number.isInteger(hours) ? hours : hours.toFixed(1)} hour${hours === 1 ? "" : "s"}`; }
+async function weeklyPdf(report: WeeklyReport) {
+  const { buildWeeklyReportPdf, safeFilename } = await import("../../lib/care-report-pdf");
+  buildWeeklyReportPdf(report).save(`kelo-weekly-report-${safeFilename(report.clientName)}-${safeFilename(report.dateRange)}.pdf`);
+}
+async function pdf(visit: Visit, workspace: Workspace) {
+  const { buildSessionReportPdf, safeFilename } = await import("../../lib/care-report-pdf");
+  buildSessionReportPdf({ agencyName: workspace.agencyName, clientName: client(visit.client_id, workspace), caregiverName: caregiver(visit.caregiver_id, workspace), date: visit.date, startTime: visit.start_time, endTime: visit.end_time, actualStart: visit.actual_start, actualEnd: visit.actual_end }).save(`kelo-session-${safeFilename(client(visit.client_id, workspace))}-${visit.date}-${visit.id.slice(0, 8)}.pdf`);
+}
