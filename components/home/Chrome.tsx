@@ -36,22 +36,46 @@ export function SiteHeader({ home = false }: { home?: boolean }) {
 
 export function SiteFooter() {
   return (
-    <footer className="rd-footer">
-      <div className="rd-shell rd-foot-in">
-        <div><Brand /><p>One coordinated record for everyone who makes care happen.</p></div>
-        <nav aria-label="Footer navigation">
-          <Link href="/get-started">Get started</Link>
-          <Link href="/for-agencies">Agency sign in</Link>
-          <Link href="/privacy">Privacy</Link>
-          <Link href="/terms">Terms</Link>
-          <Link href="/accessibility">Accessibility</Link>
-          <Link href="/delete-account">Delete account</Link>
-          <a href="mailto:hello@kelo-care.com">Contact</a>
+    <footer className="rd-ft">
+      <div className="rd-shell rd-ft-top">
+        <div className="rd-ft-brand">
+          <Brand />
+          <p>One coordinated record for everyone who makes care happen: caregivers, families and agencies.</p>
+          <div className="rd-ft-stores" aria-label="Kelo Care is coming soon to the App Store and Google Play">
+            <span><small>Coming soon to the</small><b>App Store</b></span>
+            <span><small>Coming soon to</small><b>Google Play</b></span>
+          </div>
+        </div>
+        <nav className="rd-ft-col" aria-label="Product">
+          <h4>Product</h4>
+          <a href="/#features">Features</a>
+          <a href="/#how">How it works</a>
+          <a href="/#pricing">Pricing</a>
+          <a href="/#faq">FAQ</a>
         </nav>
+        <nav className="rd-ft-col" aria-label="For agencies">
+          <h4>For agencies</h4>
+          <a href="/#portal">Agency portal</a>
+          <Link href="/for-agencies">Agency sign in</Link>
+          <Link href="/get-started">Get started</Link>
+        </nav>
+        <nav className="rd-ft-col" aria-label="Legal">
+          <h4>Legal &amp; help</h4>
+          <Link href="/privacy">Privacy policy</Link>
+          <Link href="/terms">Terms of service</Link>
+          <Link href="/accessibility">Accessibility</Link>
+          <Link href="/delete-account">Delete your account</Link>
+        </nav>
+        <div className="rd-ft-col">
+          <h4>Contact</h4>
+          <a href="mailto:hello@kelo-care.com">hello@kelo-care.com</a>
+          <p className="rd-ft-note">Questions, privacy requests or accessibility help? Write to us and we’ll reply.</p>
+        </div>
       </div>
-      <div className="rd-shell rd-foot-bot">
+      <div className="rd-shell rd-ft-bot">
         <span>© 2026 Kelo Care. All rights reserved.</span>
-        <span>Not an emergency service or medical device.</span>
+        <span className="rd-ft-disc">Kelo is not an emergency service or medical device.</span>
+        <span className="rd-ft-power">Powered by <b>Redmoose AI</b></span>
       </div>
     </footer>
   );

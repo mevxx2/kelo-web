@@ -373,3 +373,25 @@
 .rd-gs-sent { padding: 12px 16px; border-radius: 14px; background: #e8f8ee; color: #176b3a; }
 .rd-gs-agency a { color: var(--indigo); font-weight: 600; }
 @media (max-width: 760px) { .rd-gs-roles { grid-template-columns: 1fr; } }
+
+/* ---- footer ---- */
+.rd-ft { background: var(--ink); color: rgba(255, 255, 255, 0.72); padding: 72px 0 28px; margin-top: 40px; position: relative; overflow: hidden; }
+.rd-ft::before { content: ""; position: absolute; width: 620px; height: 620px; right: -200px; top: -360px; border-radius: 50%; background: radial-gradient(circle, rgba(0, 102, 255, 0.35), transparent 65%); pointer-events: none; }
+.rd-ft-top { position: relative; display: grid; grid-template-columns: 1.5fr repeat(4, 1fr); gap: 40px; padding-bottom: 48px; border-bottom: 1px solid rgba(255, 255, 255, 0.12); }
+.rd-ft .rd-brand b { color: #fff; }
+.rd-ft-brand p { margin-top: 16px; max-width: 320px; font-size: 14px; line-height: 1.65; }
+.rd-ft-stores { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 20px; }
+.rd-ft-stores span { display: grid; padding: 8px 16px; border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.18); background: rgba(255, 255, 255, 0.05); }
+.rd-ft-stores small { font-size: 10px; opacity: 0.7; }
+.rd-ft-stores b { font-size: 15px; color: #fff; }
+.rd-ft-col { display: grid; gap: 11px; align-content: start; font-size: 14px; }
+.rd-ft-col h4 { margin: 0 0 6px; font-family: var(--font-host), sans-serif; font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: #9cc2ff; }
+.rd-ft-col a { color: rgba(255, 255, 255, 0.78); width: fit-content; background: linear-gradient(currentColor, currentColor) 0 100% / 0 1px no-repeat; transition: color 0.2s, background-size 0.3s; }
+.rd-ft-col a:hover { color: #fff; background-size: 100% 1px; }
+.rd-ft-note { font-size: 13px; line-height: 1.55; color: rgba(255, 255, 255, 0.5); margin: 4px 0 0; }
+.rd-ft-bot { position: relative; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px 24px; padding-top: 24px; font-size: 13px; color: rgba(255, 255, 255, 0.55); }
+.rd-ft-power { padding: 7px 14px; border-radius: 999px; background: rgba(255, 255, 255, 0.07); border: 1px solid rgba(255, 255, 255, 0.14); color: rgba(255, 255, 255, 0.75); }
+.rd-ft-power b { color: #fff; font-weight: 700; letter-spacing: 0.01em; }
+.rd-ft-power b::before { content: ""; display: inline-block; width: 8px; height: 8px; margin: 0 6px 1px 2px; border-radius: 50%; background: #ff4d5e; box-shadow: 0 0 0 3px rgba(255, 77, 94, 0.22); }
+@media (max-width: 1020px) { .rd-ft-top { grid-template-columns: 1fr 1fr 1fr; } .rd-ft-brand { grid-column: 1 / -1; } }
+@media (max-width: 620px) { .rd-ft-top { grid-template-columns: 1fr 1fr; } .rd-ft-bot { justify-content: flex-start; } }
